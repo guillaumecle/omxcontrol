@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-        Process omx = Runtime.getRuntime().exec("omxplayer ~/music/*");
+        Process omx = Runtime.getRuntime().exec("omxplayer ~/music/Our\\ Story.mp3");
         new StdReader(omx).start();
         new ErrReader(omx).start();
     }
