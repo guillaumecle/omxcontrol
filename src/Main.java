@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
 
@@ -8,6 +6,12 @@ public class Main {
         Process omx = Runtime.getRuntime().exec(new String[]{"omxplayer", "/home/pi/music/Our Story.mp3"});
         new StdReader(omx).start();
         new ErrReader(omx).start();
+        Writer w = new OutputStreamWriter(omx.getOutputStream());
+        Reader bf = new InputStreamReader(System.in);
+        int r;
+        while ((r = bf.read()) != -1) {
+            w.write(r);
+        }
     }
 
     public static class StdReader extends Thread {
