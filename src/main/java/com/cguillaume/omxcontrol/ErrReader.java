@@ -1,3 +1,4 @@
+package com.cguillaume.omxcontrol;
 
 public class ErrReader extends StreamReader {
 

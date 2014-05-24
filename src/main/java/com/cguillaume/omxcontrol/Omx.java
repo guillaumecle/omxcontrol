@@ -1,21 +1,23 @@
+package com.cguillaume.omxcontrol;
+
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 public class Omx {
-	
+
 	public static final String commandName = "omxplayer";
-	
+
 	private Process omxPlayer;
 	private StdReader std;
 	private ErrReader err;
-	private OutputStreamWriter clavier;
+	private PrintWriter clavier;
 	private boolean playing;
 	private boolean alive;
-	
+
 	public void startPlaying(String trackFilePath) {
 		String[] command = new String[] {
-			commandName,
-			trackFilePath
+				commandName,
+				trackFilePath
 		};
 		createProces(command);
 		playing = true;
@@ -27,10 +29,10 @@ public class Omx {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			std = new StdReader(omxPlayer);
 			std.addListener(new StreamListener() {
-				
+
 				@Override
 				public void onNewLine(String line) {}
-				
+
 				@Override
 				public void onClose() {
 					alive = false;
@@ -39,41 +41,37 @@ public class Omx {
 			std.start();
 			err = new ErrReader(omxPlayer);
 			err.addListener(new StreamListener() {
-				
+
 				@Override
 				public void onNewLine(String line) {
 					System.err.println("ERROR : " + line);
 				}
-				
+
 				@Override
 				public void onClose() {}
 			});
 			err.start();
-			clavier = new OutputStreamWriter(omxPlayer.getOutputStream());
+			clavier = new PrintWriter(omxPlayer.getOutputStream(), true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean pause() {
-		try {
-			clavier.write(' ');
-			playing = !playing;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		clavier.printf(" ");
+		playing = !playing;
 		return playing;
 	}
-	
+
 	public boolean stop() {
 		omxPlayer.destroy();
 		return alive = false;
 	}
-	
+
 	public boolean isPlaying() {
 		return playing;
 	}
-	
+
 	public boolean isAlive() {
 		return alive;
 	}
