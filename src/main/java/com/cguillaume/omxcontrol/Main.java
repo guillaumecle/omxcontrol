@@ -3,6 +3,7 @@ package com.cguillaume.omxcontrol;
 import spark.ExceptionHandler;
 import spark.Request;
 import spark.Response;
+import com.cguillaume.omxcontrol.youtube.YoutubeController;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -15,6 +16,8 @@ public class Main {
 		Injector injector = Guice.createInjector();
 		Spark.get("/", injector.getInstance(MainController.class), new FreeMarkerEngine());
 		Spark.get("/ajax/:action/:trackFilePath", injector.getInstance(AjaxController.class));
+        Spark.get("/youtube", new YoutubeController());
+        Spark.post("/youtube", new YoutubeController());
 		Spark.exception(Exception.class, new ExceptionHandler() {
 
 			@Override

@@ -28,12 +28,14 @@ public class Omx {
 				commandName,
 				trackFilePath
 		};
-		createProces(command);
+		createProcess(command);
 		playing = true;
 		alive = true;
 	}
 
-	private void createProces(String[] command) {
+	private void createProcess(String[] command) {
+		if (alive)
+			stop();
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			std = new StdReader(omxPlayer);
