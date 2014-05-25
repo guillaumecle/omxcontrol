@@ -1,5 +1,6 @@
 package com.cguillaume.omxcontrol;
 
+import com.cguillaume.omxcontrol.youtube.YoutubeController;
 import spark.Spark;
 
 public class Main {
@@ -8,7 +9,9 @@ public class Main {
 		Omx omx = new Omx();
 		Spark.get(new MainController());
 		Spark.get(new AjaxController(omx));
-		omx.startPlaying("/home/pi/music/Our Story.mp3");
+        Spark.get(new YoutubeController());
+        Spark.post(new YoutubeController());
+        omx.startPlaying("/home/pi/music/Our Story.mp3");
     }
 
 }
