@@ -9,22 +9,18 @@ import com.google.inject.Singleton;
 public class Playlist {
 	
 	private List<String> list = new ArrayList<>();
-	private Integer current;
+	private int current = -1;
 	
-	public void add(String track) {
-		list.add(track);
-		System.out.println(list);
+	public boolean add(String track) {
+		return list.add(track);
 	}
 	
 	public boolean hasNext() {
-		if (current == null)
-			return list.size() > 0;
-		else
-			return list.size() > current + 1;
+		return list.size() > current + 1;
 	}
 	
 	public String next() {
-		return list.get(current++);
+		return list.get(++current);
 	}
 
 	public List<String> getList() {

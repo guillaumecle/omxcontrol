@@ -28,5 +28,6 @@ Playlist
     </li>
 </#list>
 </ul>
+<a onclick="pause()">play/pause</a>
 </body>
 </html>

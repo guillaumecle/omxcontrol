@@ -24,13 +24,15 @@ public class AjaxController implements Route {
 		switch (request.params(":action")) {
 		case ACTION_PAUSE:
 			if (omx.isAlive())
-				omx.pause();
-			else
+				return omx.pause();
+			else if (playlist.hasNext())
 				omx.startPlaying(playlist.next());
+			else
+				return false;
 			break;
 		case ACTION_ADD:
 			try {
-				playlist.add(URLDecoder.decode(request.params(":trackFilePath"), "utf-8"));
+				return playlist.add(URLDecoder.decode(request.params(":trackFilePath"), "utf-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

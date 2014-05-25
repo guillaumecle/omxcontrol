@@ -15,7 +15,8 @@ public class Main {
 		Spark.staticFileLocation("public");
 		Spark.get("/", injector.getInstance(MainController.class), new FreeMarkerEngine());
 		Spark.get("/ajax/:action/:trackFilePath", injector.getInstance(AjaxController.class));
-        Spark.get("/youtube", injector.getInstance(YoutubeController.class));
+		Spark.get("/ajax/:action", injector.getInstance(AjaxController.class));
+		Spark.get("/youtube", injector.getInstance(YoutubeController.class));
         Spark.post("/youtube", injector.getInstance(YoutubeController.class));
 	}
 
