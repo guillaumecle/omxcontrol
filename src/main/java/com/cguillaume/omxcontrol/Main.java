@@ -1,15 +1,14 @@
 package com.cguillaume.omxcontrol;
 
-import java.io.*;
+import spark.Spark;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Omx omx = new Omx();
+		Spark.get(new MainController());
+		Spark.get(new AjaxController(omx));
 		omx.startPlaying("/home/pi/music/Our Story.mp3");
-        while (System.in.read() != -1) {
-        	System.out.println(omx.pause());
-        }
     }
 
 }

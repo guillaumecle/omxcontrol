@@ -25,13 +25,17 @@ public class Omx {
 	}
 
 	private void createProces(String[] command) {
+		if (alive)
+			stop();
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			std = new StdReader(omxPlayer);
 			std.addListener(new StreamListener() {
 
 				@Override
-				public void onNewLine(String line) {}
+				public void onNewLine(String line) {
+					System.out.println("LOG : " + line);
+				}
 
 				@Override
 				public void onClose() {
@@ -58,6 +62,8 @@ public class Omx {
 	}
 
 	public boolean pause() {
+		if (!alive)
+			throw new IllegalStateException();
 		clavier.printf(" ");
 		playing = !playing;
 		return playing;
