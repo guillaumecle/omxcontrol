@@ -11,11 +11,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		Injector injector = Guice.createInjector();
+		Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
+		Spark.staticFileLocation("public");
 		Spark.get("/", injector.getInstance(MainController.class), new FreeMarkerEngine());
 		Spark.get("/ajax/:action/:trackFilePath", injector.getInstance(AjaxController.class));
-        Spark.get("/youtube", new YoutubeController());
-        Spark.post("/youtube", new YoutubeController());
-		Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
+        Spark.get("/youtube", injector.getInstance(YoutubeController.class));
+        Spark.post("/youtube", injector.getInstance(YoutubeController.class));
 	}
 
 }

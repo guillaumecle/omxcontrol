@@ -19,11 +19,6 @@ public class AjaxController implements Route {
 	@Inject
 	private Playlist playlist;
 
-//	@Inject
-//	public AjaxController(Omx omx) {
-//		this.omx = omx;
-//	}
-	
 	@Override
 	public Object handle(Request request, Response response) {
 		switch (request.params(":action")) {

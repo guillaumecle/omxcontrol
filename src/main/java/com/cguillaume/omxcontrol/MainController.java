@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.google.inject.Inject;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -15,14 +16,21 @@ import spark.TemplateViewRoute;
 
 public class MainController implements TemplateViewRoute {
 
-	private static final FilenameFilter ausioFileFilter = (dir, name) -> name.endsWith(".mp3");
+	private static final FilenameFilter audioFileFilter = (dir, name) -> name.endsWith(".mp3");
+
+	@Inject
+	private Playlist playlist;
+	@Inject
+	private Config config;
 
 	@Override
 	public ModelAndView handle(Request request, Response response) {
-		File folder = new File("music");
-		List<File> list = new ArrayList<>();
-		Collections.addAll(list, folder.listFiles(ausioFileFilter));
 		Map<String, Object> model = new TreeMap<>();
+		File folder = new File(config.getLibraryLocation());
+		List<File> lib = new ArrayList<>();
+		Collections.addAll(lib, folder.listFiles(audioFileFilter));
+		model.put("lib", lib);
+		List<String> list = playlist.getList();
 		model.put("list", list);
 		return new ModelAndView(model, "main.ftl");
 	}

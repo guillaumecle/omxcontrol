@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class Playlist {
 	
-	private List<String> list = new ArrayList<String>();
+	private List<String> list = new ArrayList<>();
 	private Integer current;
 	
 	public void add(String track) {
@@ -25,5 +25,9 @@ public class Playlist {
 	
 	public String next() {
 		return list.get(current++);
+	}
+
+	public List<String> getList() {
+		return list;
 	}
 }

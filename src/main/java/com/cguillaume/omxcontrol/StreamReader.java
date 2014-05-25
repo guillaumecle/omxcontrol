@@ -10,7 +10,7 @@ import java.util.List;
 public class StreamReader extends Thread {
 
 	private InputStream in;
-	private List<StreamListener> listeners = new ArrayList<StreamListener>();
+	private List<StreamListener> listeners = new ArrayList<>();
 
 	public StreamReader(InputStream in) {
 		this.in = in;
