@@ -1,14 +1,29 @@
 package com.cguillaume.omxcontrol;
 
+import spark.ExceptionHandler;
+import spark.Request;
+import spark.Response;
 import spark.Spark;
+import spark.template.freemarker.FreeMarkerEngine;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Omx omx = new Omx();
-		Spark.get(new MainController());
-		Spark.get(new AjaxController(omx));
-		omx.startPlaying("/home/pi/music/Our Story.mp3");
-    }
+		Injector injector = Guice.createInjector();
+		Spark.get("/", injector.getInstance(MainController.class), new FreeMarkerEngine());
+		Spark.get("/ajax/:action/:trackFilePath", injector.getInstance(AjaxController.class));
+		Spark.exception(Exception.class, new ExceptionHandler() {
+
+			@Override
+			public void handle(Exception exception, Request request, Response response) {
+				exception.printStackTrace();
+			}
+
+		});
+		//omx.startPlaying("/home/pi/music/Our Story.mp3");
+	}
 
 }

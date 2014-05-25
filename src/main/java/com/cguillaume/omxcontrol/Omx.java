@@ -3,10 +3,17 @@ package com.cguillaume.omxcontrol;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class Omx {
 
 	public static final String commandName = "omxplayer";
 
+	@Inject
+	private Playlist playlist;
+	
 	private Process omxPlayer;
 	private StdReader std;
 	private ErrReader err;
@@ -15,6 +22,8 @@ public class Omx {
 	private boolean alive;
 
 	public void startPlaying(String trackFilePath) {
+		if (alive)
+			stop();
 		String[] command = new String[] {
 				commandName,
 				trackFilePath
@@ -25,8 +34,6 @@ public class Omx {
 	}
 
 	private void createProces(String[] command) {
-		if (alive)
-			stop();
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			std = new StdReader(omxPlayer);
@@ -40,6 +47,8 @@ public class Omx {
 				@Override
 				public void onClose() {
 					alive = false;
+					if (playlist.hasNext())
+						startPlaying(playlist.next());
 				}
 			});
 			std.start();
