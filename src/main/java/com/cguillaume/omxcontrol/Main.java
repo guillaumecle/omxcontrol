@@ -1,12 +1,9 @@
 package com.cguillaume.omxcontrol;
 
-import spark.ExceptionHandler;
-import spark.Request;
-import spark.Response;
-import com.cguillaume.omxcontrol.youtube.YoutubeController;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import com.cguillaume.omxcontrol.youtube.YoutubeController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
