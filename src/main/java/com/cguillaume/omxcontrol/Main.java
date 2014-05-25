@@ -18,15 +18,7 @@ public class Main {
 		Spark.get("/ajax/:action/:trackFilePath", injector.getInstance(AjaxController.class));
         Spark.get("/youtube", new YoutubeController());
         Spark.post("/youtube", new YoutubeController());
-		Spark.exception(Exception.class, new ExceptionHandler() {
-
-			@Override
-			public void handle(Exception exception, Request request, Response response) {
-				exception.printStackTrace();
-			}
-
-		});
-		//omx.startPlaying("/home/pi/music/Our Story.mp3");
+		Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
 	}
 
 }
