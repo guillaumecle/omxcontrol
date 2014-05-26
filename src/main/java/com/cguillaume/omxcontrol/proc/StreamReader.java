@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol;
+package com.cguillaume.omxcontrol.proc;
 
 import java.io.BufferedReader;
 import java.io.IOException;

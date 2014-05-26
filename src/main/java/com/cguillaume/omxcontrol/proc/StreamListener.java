@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol;
+package com.cguillaume.omxcontrol.proc;
 
 public interface StreamListener {
 

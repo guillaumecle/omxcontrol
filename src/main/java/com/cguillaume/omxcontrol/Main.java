@@ -3,6 +3,8 @@ package com.cguillaume.omxcontrol;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import com.cguillaume.omxcontrol.controller.AjaxController;
+import com.cguillaume.omxcontrol.controller.MainController;
 import com.cguillaume.omxcontrol.youtube.YoutubeController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

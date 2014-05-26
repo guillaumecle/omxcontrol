@@ -20,13 +20,11 @@ public class Config {
 			tab = line.split("=");
 			map.put(tab[0].trim(), tab.length > 1 ? tab[1].trim() : null);
 		}
+		bufferedReader.close();
 	}
 
 	public String getLibraryLocation() {
 		return map.get("lib");
 	}
 
-	public String getStaticFilesLocation() {
-		return map.get("static");
-	}
 }

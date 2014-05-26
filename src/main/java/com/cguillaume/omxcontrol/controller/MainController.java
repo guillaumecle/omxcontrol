@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol;
+package com.cguillaume.omxcontrol.controller;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.Playlist;
 import com.google.inject.Inject;
+
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -32,6 +35,7 @@ public class MainController implements TemplateViewRoute {
 		model.put("lib", lib);
 		List<String> list = playlist.getList();
 		model.put("list", list);
+		model.put("current", playlist.getCurrent());
 		return new ModelAndView(model, "main.ftl");
 	}
 

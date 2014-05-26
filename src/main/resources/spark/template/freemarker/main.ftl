@@ -24,10 +24,13 @@ Playlist
 <ul>
 <#list list as item>
     <li>
-        ${item}
+        <#if current == item_index>
+            &#9654;
+        </#if>
+        <a onclick="startFrom(${item_index})">${item}</a>
     </li>
 </#list>
 </ul>
-<a onclick="pause()">play/pause</a>
+<a onclick="pause()">&#9654; play/pause</a>
 </body>
 </html>

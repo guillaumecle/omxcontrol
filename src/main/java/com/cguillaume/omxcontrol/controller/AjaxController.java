@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol;
+package com.cguillaume.omxcontrol.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -7,6 +7,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import com.cguillaume.omxcontrol.Omx;
+import com.cguillaume.omxcontrol.Playlist;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 
 public class AjaxController implements Route {
@@ -18,6 +21,8 @@ public class AjaxController implements Route {
 	private Omx omx;
 	@Inject
 	private Playlist playlist;
+	@Inject
+	private Gson gson;
 
 	@Override
 	public Object handle(Request request, Response response) {
@@ -32,7 +37,11 @@ public class AjaxController implements Route {
 			break;
 		case ACTION_ADD:
 			try {
-				return playlist.add(URLDecoder.decode(request.params(":trackFilePath"), "utf-8"));
+				if (playlist.add(URLDecoder.decode(request.params(":trackFilePath"), "utf-8"))) {
+					return gson.toJson(playlist);
+				} else {
+					return false;
+				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

@@ -68,8 +68,7 @@ public class YoutubeDownloader extends Thread {
 
 	private URL getAudioUrl() throws IOException {
 		Process proc = Runtime.getRuntime().exec("youtube-dl -f 140 -g " + youtubeUrl);
-		InputStream stream = proc.getInputStream();
-		try (Scanner s = new Scanner(stream).useDelimiter("\\A")) {
+		try (Scanner s = new Scanner(proc.getInputStream()).useDelimiter("\\A")) {
 			return new URL(s.hasNext() ? s.next() : "");
 		}
 	}

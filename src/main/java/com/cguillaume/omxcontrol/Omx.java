@@ -3,6 +3,9 @@ package com.cguillaume.omxcontrol;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.cguillaume.omxcontrol.proc.ErrReader;
+import com.cguillaume.omxcontrol.proc.StdReader;
+import com.cguillaume.omxcontrol.proc.StreamListener;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,8 +37,6 @@ public class Omx {
 	}
 
 	private void createProcess(String[] command) {
-		if (alive)
-			stop();
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			std = new StdReader(omxPlayer);
