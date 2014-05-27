@@ -1,10 +1,14 @@
 function buildPlaylist(playlist) {
 	var container = jQuery('#playlist');
 	container.empty();
-	for (var i = 0; i < playlist.list.length; i++) {
-		var track = playlist.list[i];
-		container.append($('<li>').text(track));
-	}
+	var tr, td;
+	jQuery.each(playlist.list, function(index, track) {
+		tr = jQuery('<tr>');
+		td = jQuery('<td>');
+		if (index == playlist.current)
+			td.text('▶');
+		container.append(tr.append(td).append(jQuery('<td>').text(track)));
+	});
 }
 function addFromLib(elem) {
     jQuery.ajax({
@@ -18,7 +22,7 @@ function addFromLib(elem) {
 function pause() {
     jQuery.ajax({
         url: 'ajax/pause'
-    })
+    });
 }
 function add(elem) {
     console.log(elem.previousSibling.previousSibling.value);

@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import com.cguillaume.omxcontrol.Config;
 import com.cguillaume.omxcontrol.Playlist;
+import com.cguillaume.omxcontrol.Util;
 import com.google.inject.Inject;
 
 import spark.ModelAndView;
@@ -25,6 +26,8 @@ public class MainController implements TemplateViewRoute {
 	private Playlist playlist;
 	@Inject
 	private Config config;
+	@Inject
+	private Util util;
 
 	@Override
 	public ModelAndView handle(Request request, Response response) {
@@ -36,6 +39,7 @@ public class MainController implements TemplateViewRoute {
 		List<String> list = playlist.getList();
 		model.put("list", list);
 		model.put("current", playlist.getCurrent());
+		model.put("freeSpace", util.getFreeSpace());
 		return new ModelAndView(model, "main.ftl");
 	}
 

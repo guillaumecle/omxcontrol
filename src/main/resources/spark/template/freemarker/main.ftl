@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-Library
+Library (${freeSpace})
 <ul>
 <#list lib as item>
     <li>
@@ -21,16 +21,20 @@ Library
 <a onclick="add(this)">Add to playlist</a>
 </p>
 Playlist
-<ul id="playlist">
+<table id="playlist">
 <#list list as item>
-    <li>
-        <#if current == item_index>
-            &#9654;
-        </#if>
-        <a onclick="startFrom(${item_index})">${item}</a>
-    </li>
+    <tr>
+        <td>
+            <#if current == item_index>
+                &#9654;
+        	</#if>
+        </td>
+		<td>
+	        <a onclick="startFrom(${item_index})">${item}</a>
+		</td>
+    </tr>
 </#list>
-</ul>
+</table>
 <a onclick="pause()">&#9654; play/pause</a>
 </body>
 </html>
