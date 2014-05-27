@@ -21,7 +21,7 @@ Library
 <a onclick="add(this)">Add to playlist</a>
 </p>
 Playlist
-<ul>
+<ul id="playlist">
 <#list list as item>
     <li>
         <#if current == item_index>
