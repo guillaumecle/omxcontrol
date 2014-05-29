@@ -1,9 +1,9 @@
 package com.cguillaume.omxcontrol.websocket;
 
-import com.google.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.inject.Singleton;
 
 @Singleton
 public class WebSocketManager {
@@ -18,9 +18,9 @@ public class WebSocketManager {
 		webSockets.remove(webSocket);
 	}
 
-	public void sendToAll(String text) {
+	public void sendToAll(WebSocketActionWrapper actionWraper) {
 		for (WebSocket webSocket : webSockets) {
-			webSocket.send(text);
+			webSocket.send(actionWraper);
 		}
 	}
 

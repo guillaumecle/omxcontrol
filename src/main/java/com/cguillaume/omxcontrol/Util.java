@@ -1,9 +1,9 @@
 package com.cguillaume.omxcontrol;
 
+import java.io.File;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.io.File;
 
 @Singleton
 public class Util {

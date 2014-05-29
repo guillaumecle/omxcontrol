@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import com.cguillaume.omxcontrol.proc.ErrReader;
 import com.cguillaume.omxcontrol.proc.StdReader;
 import com.cguillaume.omxcontrol.proc.StreamListener;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import com.cguillaume.omxcontrol.websocket.WebSocketManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -15,12 +17,13 @@ public class Omx {
 	public static final String commandName = "omxplayer";
 
 	@Inject
-	private Playlist playlist;
-	
-	private Process omxPlayer;
-	private StdReader std;
-	private ErrReader err;
-	private PrintWriter clavier;
+	private transient Playlist playlist;
+	@Inject
+	private transient WebSocketManager webSocketManager;
+
+	private transient Process omxPlayer;
+	private transient PrintWriter clavier;
+
 	private boolean playing;
 	private boolean alive;
 
@@ -34,12 +37,13 @@ public class Omx {
 		createProcess(command);
 		playing = true;
 		alive = true;
+		webSocketManager.sendToAll(new WebSocketActionWrapper("playlistUpdated", playlist));
 	}
 
 	private void createProcess(String[] command) {
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
-			std = new StdReader(omxPlayer);
+			StdReader std = new StdReader(omxPlayer);
 			std.addListener(new StreamListener() {
 
 				@Override
@@ -55,7 +59,7 @@ public class Omx {
 				}
 			});
 			std.start();
-			err = new ErrReader(omxPlayer);
+			ErrReader err = new ErrReader(omxPlayer);
 			err.addListener(new StreamListener() {
 
 				@Override
@@ -64,7 +68,8 @@ public class Omx {
 				}
 
 				@Override
-				public void onClose() {}
+				public void onClose() {
+				}
 			});
 			err.start();
 			clavier = new PrintWriter(omxPlayer.getOutputStream(), true);
