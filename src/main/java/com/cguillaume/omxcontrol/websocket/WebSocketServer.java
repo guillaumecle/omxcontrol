@@ -7,9 +7,9 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
-public class EventServer {
+public class WebSocketServer {
 	
-    public static void main(String[] args) {
+	public static void start() {
 		Server server = new Server();
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(8080);
@@ -18,18 +18,18 @@ public class EventServer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
         
-        ServletHolder holderEvents = new ServletHolder("ws", new WebSocketServlet() {
+        @SuppressWarnings("serial")
+		ServletHolder holder = new ServletHolder("ws", new WebSocketServlet() {
 			@Override
 			public void configure(WebSocketServletFactory factory) {
-				System.out.println("registred");
-				factory.register(EventSocket.class);
+				factory.register(WebSocket.class);
 			}
 		});
-        context.addServlet(holderEvents, "/");
+        context.addServlet(holder, "/");
         try {
 			server.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }
