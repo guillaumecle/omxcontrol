@@ -9,7 +9,8 @@ public class EventServer
 {
     public static void main(String[] args)
     {
-        Server server = new Server();
+		System.out.println("a");
+		Server server = new Server();
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(8080);
         server.addConnector(connector);
@@ -27,7 +28,6 @@ public class EventServer
         try
         {
             server.start();
-            server.dump(System.err);
             server.join();
         }
         catch (Throwable t)
