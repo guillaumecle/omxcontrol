@@ -2,11 +2,9 @@ package com.cguillaume.omxcontrol.controller;
 
 import javax.inject.Inject;
 
-import com.cguillaume.omxcontrol.websocket.Handler;
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.cguillaume.omxcontrol.Omx;
 import com.cguillaume.omxcontrol.Playlist;
+import com.cguillaume.omxcontrol.websocket.Handler;
 import com.cguillaume.omxcontrol.websocket.WebSocketHandler;
 
 public class MainWSHandler extends WebSocketHandler{

@@ -3,6 +3,9 @@ package com.cguillaume.omxcontrol;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cguillaume.omxcontrol.proc.ErrReader;
 import com.cguillaume.omxcontrol.proc.StdReader;
 import com.cguillaume.omxcontrol.proc.StreamListener;
@@ -10,8 +13,6 @@ import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 import com.cguillaume.omxcontrol.websocket.WebSocketManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class Omx {
