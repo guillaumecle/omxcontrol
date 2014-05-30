@@ -3,24 +3,31 @@ package com.cguillaume.omxcontrol;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cguillaume.omxcontrol.proc.ErrReader;
 import com.cguillaume.omxcontrol.proc.StdReader;
 import com.cguillaume.omxcontrol.proc.StreamListener;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import com.cguillaume.omxcontrol.websocket.WebSocketManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class Omx {
 
+	private static final Logger logger = LoggerFactory.getLogger(Omx.class);
 	public static final String commandName = "omxplayer";
 
 	@Inject
-	private Playlist playlist;
-	
-	private Process omxPlayer;
-	private StdReader std;
-	private ErrReader err;
-	private PrintWriter clavier;
+	private transient Playlist playlist;
+	@Inject
+	private transient WebSocketManager webSocketManager;
+
+	private transient Process omxPlayer;
+	private transient PrintWriter clavier;
+
 	private boolean playing;
 	private boolean alive;
 
@@ -31,20 +38,22 @@ public class Omx {
 				commandName,
 				trackFilePath
 		};
-		createProcess(command);
-		playing = true;
-		alive = true;
+		if (createProcess(command)) {
+			playing = true;
+			alive = true;
+			webSocketManager.sendToAll(new WebSocketActionWrapper("updateCurrent", playlist.getCurrent()));
+		}
 	}
 
-	private void createProcess(String[] command) {
+	private boolean createProcess(String[] command) {
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
-			std = new StdReader(omxPlayer);
+			StdReader std = new StdReader(omxPlayer);
 			std.addListener(new StreamListener() {
 
 				@Override
 				public void onNewLine(String line) {
-					System.out.println("LOG : " + line);
+					logger.info("StdOut : " + line);
 				}
 
 				@Override
@@ -55,21 +64,28 @@ public class Omx {
 				}
 			});
 			std.start();
-			err = new ErrReader(omxPlayer);
+			ErrReader err = new ErrReader(omxPlayer);
 			err.addListener(new StreamListener() {
 
 				@Override
 				public void onNewLine(String line) {
-					System.err.println("ERROR : " + line);
+					logger.warn("ErrOut : " + line);
 				}
 
 				@Override
-				public void onClose() {}
+				public void onClose() {
+				}
 			});
 			err.start();
 			clavier = new PrintWriter(omxPlayer.getOutputStream(), true);
+			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (e.getMessage().startsWith("Cannot run program \"omxplayer\"")) {
+				logger.error("Your system is not able to run omxplayer");
+			} else {
+				logger.error("Error creating omxplayer process", e);
+			}
+			return false;
 		}
 	}
 

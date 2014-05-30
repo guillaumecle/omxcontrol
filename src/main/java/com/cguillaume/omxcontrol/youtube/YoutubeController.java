@@ -1,10 +1,10 @@
 package com.cguillaume.omxcontrol.youtube;
 
-import com.google.inject.Singleton;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
+import com.google.inject.Singleton;
 
 @Singleton
 public class YoutubeController implements Route {
