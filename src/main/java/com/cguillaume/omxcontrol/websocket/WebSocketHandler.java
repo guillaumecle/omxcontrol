@@ -8,6 +8,6 @@ public abstract class WebSocketHandler {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void handleDefault(String action, Object message) {
-		logger.warn("No handler define for this action (" + action + ")");
+		logger.warn("No correct handler define for this action (" + action + ")");
 	}
 }

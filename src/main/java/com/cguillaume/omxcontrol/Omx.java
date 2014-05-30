@@ -10,10 +10,13 @@ import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 import com.cguillaume.omxcontrol.websocket.WebSocketManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class Omx {
 
+	private static final Logger logger = LoggerFactory.getLogger(Omx.class);
 	public static final String commandName = "omxplayer";
 
 	@Inject
@@ -34,13 +37,14 @@ public class Omx {
 				commandName,
 				trackFilePath
 		};
-		createProcess(command);
-		playing = true;
-		alive = true;
-		webSocketManager.sendToAll(new WebSocketActionWrapper("playlistUpdated", playlist));
+		if (createProcess(command)) {
+			playing = true;
+			alive = true;
+			webSocketManager.sendToAll(new WebSocketActionWrapper("updateCurrent", playlist.getCurrent()));
+		}
 	}
 
-	private void createProcess(String[] command) {
+	private boolean createProcess(String[] command) {
 		try {
 			omxPlayer = Runtime.getRuntime().exec(command);
 			StdReader std = new StdReader(omxPlayer);
@@ -48,7 +52,7 @@ public class Omx {
 
 				@Override
 				public void onNewLine(String line) {
-					System.out.println("LOG : " + line);
+					logger.info("StdOut : " + line);
 				}
 
 				@Override
@@ -64,7 +68,7 @@ public class Omx {
 
 				@Override
 				public void onNewLine(String line) {
-					System.err.println("ERROR : " + line);
+					logger.warn("ErrOut : " + line);
 				}
 
 				@Override
@@ -73,8 +77,14 @@ public class Omx {
 			});
 			err.start();
 			clavier = new PrintWriter(omxPlayer.getOutputStream(), true);
+			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (e.getMessage().startsWith("Cannot run program \"omxplayer\"")) {
+				logger.error("Your system is not able to run omxplayer");
+			} else {
+				logger.error("Error creating omxplayer process", e);
+			}
+			return false;
 		}
 	}
 

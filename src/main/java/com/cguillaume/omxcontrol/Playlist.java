@@ -22,9 +22,9 @@ public class Playlist {
 	
 	public void add(String track) {
 		list.add(track);
+		webSocketManager.sendToAll(new WebSocketActionWrapper("playlistUpdated", this));
 		if (playOnAdd && !omx.isAlive())
 			omx.startPlaying(next());
-		webSocketManager.sendToAll(new WebSocketActionWrapper("playlistUpdated", this));
 	}
 	
 	public boolean hasNext() {
@@ -32,7 +32,9 @@ public class Playlist {
 	}
 	
 	public String next() {
-		return list.get(++current);
+		current++;
+		webSocketManager.sendToAll(new WebSocketActionWrapper("updateCurrent", current));
+		return list.get(current);
 	}
 
 	public List<String> getList() {
@@ -45,6 +47,7 @@ public class Playlist {
 
 	public void setCurrent(int current) {
 		this.current = current;
+		webSocketManager.sendToAll(new WebSocketActionWrapper("updateCurrent", current));
 		omx.startPlaying(list.get(current));
 	}
 }

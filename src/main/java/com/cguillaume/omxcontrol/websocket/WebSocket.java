@@ -43,16 +43,30 @@ public class WebSocket extends WebSocketAdapter {
 	public void onWebSocketText(String message) {
 		super.onWebSocketText(message);
 		WebSocketActionWrapper actionWrapper = gson.fromJson(message, WebSocketActionWrapper.class);
-		try {
-			Method method = webSocketHandler.getClass().getMethod(actionWrapper.getAction(), Session.class, String.class);
-			try {
-				method.invoke(webSocketHandler, getSession(), actionWrapper.getMessage());
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				logger.error("Error invoking handler", e);
+		Method[] methods = webSocketHandler.getClass().getMethods();
+		for (Method method : methods) {
+			if (method.getName().equals(actionWrapper.getAction()) && method.isAnnotationPresent(Handler.class)) {
+				try {
+					Class<?>[] types = method.getParameterTypes();
+					if (types.length > 2) {
+						break;
+					}
+					Object[] params = new Object[types.length];
+					for (int i = 0; i < types.length; i++) {
+						if(types[i].equals(Session.class)) {
+							params[i] = getSession();
+						} else {
+							params[i] = gson.fromJson(actionWrapper.getMessage(), types[i]);
+						}
+					}
+					method.invoke(webSocketHandler, params);
+				} catch (Exception e) {
+					logger.error("Error invoking handler", e);
+				}
+				return;
 			}
-		} catch (NoSuchMethodException e) {
-			webSocketHandler.handleDefault(actionWrapper.getAction(), actionWrapper.getMessage());
 		}
+		webSocketHandler.handleDefault(actionWrapper.getAction(), actionWrapper.getMessage());
 	}
 
 	@Override

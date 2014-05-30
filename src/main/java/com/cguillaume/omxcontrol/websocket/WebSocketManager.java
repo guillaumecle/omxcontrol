@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class WebSocketManager {
 
-	List<WebSocket> webSockets = new ArrayList<>();
+	private List<WebSocket> webSockets = new ArrayList<>();
 
 	public void register(WebSocket webSocket) {
 		webSockets.add(webSocket);

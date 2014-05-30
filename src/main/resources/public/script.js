@@ -1,5 +1,4 @@
 function buildPlaylist(playlist) {
-	console.log(playlist);
 	var container = jQuery('#playlist');
 	container.empty();
 	var tr, td;
@@ -33,7 +32,17 @@ omxWS.onmessage = function(msgEvent) {
 		throw "Incorrect message : " + response;
 	}
 };
+omxWS.onclose = function(closeEvent) {
+	if (confirm("Connexion lost\nDo you want to reload this page?")) {
+		location.reload();
+	}
+};
 omxWS.sendAction = function(action, message) {
-	this.send(JSON.stringify({action : action, message : message}));
+	this.send(JSON.stringify({action : action, message : JSON.stringify(message)}));
 };
 playlistUpdated = buildPlaylist;
+updateCurrent = function(current) {
+	jQuery('#playlist').find('td:first-child').each(function(index, td) {
+		td.textContent = index == current ? '▶' : '';
+	});
+};

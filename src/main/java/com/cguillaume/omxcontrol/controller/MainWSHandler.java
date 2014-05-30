@@ -2,6 +2,7 @@ package com.cguillaume.omxcontrol.controller;
 
 import javax.inject.Inject;
 
+import com.cguillaume.omxcontrol.websocket.Handler;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.cguillaume.omxcontrol.Omx;
@@ -15,14 +16,16 @@ public class MainWSHandler extends WebSocketHandler{
 	@Inject
 	private Playlist playlist;
 
-	public void pause(Session session, String message) {
+	@Handler
+	public void pause() {
 		if (omx.isAlive())
 			omx.pause();
 		else if (playlist.hasNext())
 			omx.startPlaying(playlist.next());
 	}
-	
-	public void add(Session session, String message) {
-		playlist.add(message);
+
+	@Handler
+	public void add(String path) {
+		playlist.add(path);
 	}
 }
