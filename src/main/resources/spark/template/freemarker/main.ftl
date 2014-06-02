@@ -21,12 +21,20 @@ Library (${freeSpace})
 <a onclick="add(this)">Add to playlist</a>
 </p>
 Playlist
+<script>
+	current = ${current};
+	playing = ${playing};
+</script>
 <table id="playlist">
 <#list list as item>
     <tr>
         <td>
             <#if current == item_index>
-                &#9654;
+				<#if playing == 'true'>
+                	&#9654;
+				<#else>
+					P
+				</#if>
         	</#if>
         </td>
 		<td>

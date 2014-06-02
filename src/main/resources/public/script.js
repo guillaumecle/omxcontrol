@@ -1,15 +1,28 @@
-function buildPlaylist(playlist) {
+// ************* Model ***************
+var current;
+var playing;
+// *************** UI ****************
+function reBuildPlaylist(playlist) {
 	var container = jQuery('#playlist');
 	container.empty();
-	var tr, td;
-	jQuery.each(playlist.list, function(index, track) {
-		tr = jQuery('<tr>');
-		td = jQuery('<td>');
-		if (index == playlist.current)
-			td.text('▶');
-		container.append(tr.append(td).append(jQuery('<td>').text(track)));
+	jQuery.each(playlist, function(index, track) {
+		var tr = jQuery('<tr>');
+		var td = jQuery('<td>');
+		if (index == current)
+			td.text(playing ? '▶' : 'P');
+		var a = jQuery('<a>').text(track);
+		a.onclick = function(event) {
+			console.log(event);
+		};
+		container.append(tr.append(td).append(jQuery('<td>').append(a)));
 	});
 }
+function rebuildPlayIcon() {
+	jQuery('#playlist').find('td:first-child').each(function(index, td) {
+		td.textContent = index == current ? playing ? '▶' : 'P' : '';
+	});
+}
+// ************ player control *********
 function addFromLib(elem) {
     omxWS.sendAction('add', elem.textContent)
 }
@@ -19,9 +32,11 @@ function pause() {
 function add(elem) {
     console.log(elem.previousSibling.previousSibling.value);
 }
+// ******* websocket api *****************
 var omxWS = new WebSocket('ws://' + location.hostname + ':8080/');
 omxWS.onmessage = function(msgEvent) {
 	var response = JSON.parse(msgEvent.data);
+	console.log(response);
 	if (response.action && response.message) {
 		if (window[response.action]) {
 			window[response.action](JSON.parse(response.message));
@@ -32,7 +47,7 @@ omxWS.onmessage = function(msgEvent) {
 		throw "Incorrect message : " + response;
 	}
 };
-omxWS.onclose = function(closeEvent) {
+omxWS.onclose = function() {
 	if (confirm("Connexion lost\nDo you want to reload this page?")) {
 		location.reload();
 	}
@@ -40,9 +55,13 @@ omxWS.onclose = function(closeEvent) {
 omxWS.sendAction = function(action, message) {
 	this.send(JSON.stringify({action : action, message : JSON.stringify(message)}));
 };
-playlistUpdated = buildPlaylist;
+// ********* websocket handler **************
+playlistUpdated = reBuildPlaylist;
 updateCurrent = function(current) {
-	jQuery('#playlist').find('td:first-child').each(function(index, td) {
-		td.textContent = index == current ? '▶' : '';
-	});
+	window.current = current;
+	rebuildPlayIcon();
+};
+playingChanged = function(playing) {
+	window.playing = playing;
+	rebuildPlayIcon();
 };

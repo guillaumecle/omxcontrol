@@ -10,14 +10,20 @@ import java.util.List;
 public class StreamReader extends Thread {
 
 	private InputStream in;
-	private List<StreamListener> listeners = new ArrayList<>();
+	private List<NewLineListener> newLineListeners = new ArrayList<>();
+	private List<CloseListener> closeListeners = new ArrayList<>();
 
 	public StreamReader(InputStream in) {
 		this.in = in;
 	}
 
-	public StreamReader addListener(StreamListener streamListener) {
-		listeners.add(streamListener);
+	public StreamReader addNewLineListener(NewLineListener newLineListener) {
+		newLineListeners.add(newLineListener);
+		return this;
+	}
+
+	public StreamReader addCloseListenerListener(CloseListener closeListener) {
+		closeListeners.add(closeListener);
 		return this;
 	}
 
@@ -25,17 +31,18 @@ public class StreamReader extends Thread {
 	public void run() {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 		String line;
+		IOException e = null;
 		try {
 			while ((line = bufferedReader.readLine()) != null) {
-				for (StreamListener listener : listeners) {
-					listener.onNewLine(line);
+				for (NewLineListener newLineListener : newLineListeners) {
+					newLineListener.onNewLine(line);
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			e = ioe;
 		}
-		for (StreamListener listener : listeners) {
-			listener.onClose();
+		for (CloseListener closeListener : closeListeners) {
+			closeListener.onClose(e);
 		}
 	}
 

@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.cguillaume.omxcontrol.model.Synthesizer;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
 import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.Playlist;
+import com.cguillaume.omxcontrol.model.Player;
+import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.Util;
 import com.google.inject.Inject;
 
@@ -24,6 +26,10 @@ public class MainController implements TemplateViewRoute {
 
 	@Inject
 	private Playlist playlist;
+	@Inject
+	private Player player;
+	@Inject
+	private Synthesizer synthesizer;
 	@Inject
 	private Config config;
 	@Inject
@@ -36,9 +42,10 @@ public class MainController implements TemplateViewRoute {
 		List<File> lib = new ArrayList<>();
 		Collections.addAll(lib, folder.listFiles(audioFileFilter));
 		model.put("lib", lib);
-		List<String> list = playlist.getList();
-		model.put("list", list);
-		model.put("current", playlist.getCurrent());
+
+		model.put("playing", Boolean.toString(synthesizer.isPlaying()));
+		model.put("list", playlist.getList());
+		model.put("current", player.getCurrent());
 		model.put("freeSpace", util.getFreeSpace());
 		return new ModelAndView(model, "main.ftl");
 	}

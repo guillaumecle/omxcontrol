@@ -1,8 +1,7 @@
 package com.cguillaume.omxcontrol.proc;
 
-public interface StreamListener {
+public interface NewLineListener {
 
 	void onNewLine(String line);
-	void onClose();
 
 }

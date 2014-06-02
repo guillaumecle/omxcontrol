@@ -1,7 +1,8 @@
 package com.cguillaume.omxcontrol.websocket;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
@@ -12,7 +13,7 @@ import com.cguillaume.omxcontrol.Injection;
 import com.google.gson.Gson;
 import com.google.inject.Injector;
 
-public class WebSocket extends WebSocketAdapter {
+public class WebSocket extends WebSocketAdapter implements Observer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebSocket.class);
 	
@@ -84,8 +85,15 @@ public class WebSocket extends WebSocketAdapter {
 	public void send(WebSocketActionWrapper actionWraper) {
 		try {
 			getRemote().sendString(gson.toJson(actionWraper));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error("Error sending websocket message", e);
+		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg != null && arg instanceof WebSocketActionWrapper) {
+			send((WebSocketActionWrapper) arg);
 		}
 	}
 }

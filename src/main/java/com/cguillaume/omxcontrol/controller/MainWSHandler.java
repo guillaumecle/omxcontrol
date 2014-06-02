@@ -1,29 +1,29 @@
 package com.cguillaume.omxcontrol.controller;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.cguillaume.omxcontrol.Omx;
-import com.cguillaume.omxcontrol.Playlist;
+import com.cguillaume.omxcontrol.model.Player;
+import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.websocket.Handler;
 import com.cguillaume.omxcontrol.websocket.WebSocketHandler;
 
+@Singleton
 public class MainWSHandler extends WebSocketHandler{
 
 	@Inject
-	private Omx omx;
+	private Player player;
 	@Inject
 	private Playlist playlist;
 
 	@Handler
 	public void pause() {
-		if (omx.isAlive())
-			omx.pause();
-		else if (playlist.hasNext())
-			omx.startPlaying(playlist.next());
+		player.play();
 	}
 
 	@Handler
 	public void add(String path) {
 		playlist.add(path);
 	}
+
 }
