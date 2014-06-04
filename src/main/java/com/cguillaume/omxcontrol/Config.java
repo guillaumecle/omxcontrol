@@ -27,4 +27,7 @@ public class Config {
 		return map.get("lib");
 	}
 
+	public String getTempDirLocation() {
+		return map.get("tmp");
+	}
 }

@@ -15,4 +15,5 @@ public abstract class Synthesizer extends Observable {
 
 	public abstract boolean isAlive();
 	public abstract boolean isPlaying();
+
 }

@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.cguillaume.omxcontrol.model.Synthesizer;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
 import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.Util;
 import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
-import com.cguillaume.omxcontrol.Util;
+import com.cguillaume.omxcontrol.model.Synthesizer;
 import com.google.inject.Inject;
 
 public class MainController implements TemplateViewRoute {

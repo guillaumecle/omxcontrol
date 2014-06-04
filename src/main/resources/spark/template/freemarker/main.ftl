@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-Library (${freeSpace})
+<h4>
+	Library (${freeSpace})
+</h4>
 <ul>
 <#list lib as item>
     <li>
@@ -17,10 +19,16 @@ Library (${freeSpace})
 </#list>
 </ul>
 <p>
-<input/>
-<a onclick="add(this)">Add to playlist</a>
+	<input type="file">
+	<a onclick="addFile(this)">Add to library</a>
 </p>
-Playlist
+<#--<p>-->
+<#--<input/>-->
+<#--<a onclick="add(this)">Add to playlist</a>-->
+<#--</p>-->
+<h4>
+	Playlist
+</h4>
 <script>
 	current = ${current};
 	playing = ${playing};
@@ -44,5 +52,8 @@ Playlist
 </#list>
 </table>
 <a onclick="pause()">&#9654; play/pause</a>
+<h4>
+	Job(s)
+</h4>
 </body>
 </html>

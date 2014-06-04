@@ -10,4 +10,8 @@ public abstract class WebSocketHandler {
 	public void handleDefault(String action, Object message) {
 		logger.warn("No correct handler define for this action (" + action + ")");
 	}
+
+	public void handleBinary(byte[] payload, int offset, int len) {
+		logger.warn("No handler define for binary upload");
+	}
 }

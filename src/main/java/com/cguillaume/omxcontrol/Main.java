@@ -1,7 +1,5 @@
 package com.cguillaume.omxcontrol;
 
-import com.cguillaume.omxcontrol.model.VeryPrivate;
-import com.google.gson.Gson;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -32,17 +30,6 @@ public class Main {
 		Spark.get("/", injector.getInstance(MainController.class), new FreeMarkerEngine());
 		Spark.get("/youtube", injector.getInstance(YoutubeController.class));
 		WebSocketServer.start();
-
-		/** Bizzare ce gson **/
-		VeryPrivate<Boolean> booleanVeryPrivate = new VeryPrivate<Boolean>(true) {
-			@Override
-			protected void onUpdate() {
-
-			}
-		};
-
-		Gson gson = injector.getInstance(Gson.class);
-		System.out.println(gson.toJson(booleanVeryPrivate));
 	}
 
 }

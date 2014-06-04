@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class Playlist extends Observable {
 
-	private List<String> list = new ArrayList<>();
+	private final List<String> list = new ArrayList<>();
 
 	public void add(String track) {
 		list.add(track);

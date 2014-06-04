@@ -22,7 +22,7 @@ function rebuildPlayIcon() {
 		td.textContent = index == current ? playing ? '▶' : 'P' : '';
 	});
 }
-// ************ player control *********
+// *************** control *************
 function addFromLib(elem) {
     omxWS.sendAction('add', elem.textContent)
 }
@@ -32,11 +32,27 @@ function pause() {
 function add(elem) {
     console.log(elem.previousSibling.previousSibling.value);
 }
+function addFile(elem) {
+	var fileFilst = elem.previousElementSibling.files;
+	console.log(fileFilst[0]);
+	if (fileFilst.length > 0) {
+		omxWS.sendAction("uploadFile", fileFilst[0]);
+		omxWS.send(fileFilst[0]);
+//		var form = new FormData();
+//		form.append("name", "Nicholas");
+//		form.append('file', fileFilst[0]);
+//		var xhr = new XMLHttpRequest();
+//		xhr.onprogress = function () {
+//			console.log(arguments);
+//		};
+//		xhr.open('post', '/file', true);
+//		xhr.send(form);
+	}
+}
 // ******* websocket api *****************
 var omxWS = new WebSocket('ws://' + location.hostname + ':8080/');
 omxWS.onmessage = function(msgEvent) {
 	var response = JSON.parse(msgEvent.data);
-	console.log(response);
 	if (response.action && response.message) {
 		if (window[response.action]) {
 			window[response.action](JSON.parse(response.message));

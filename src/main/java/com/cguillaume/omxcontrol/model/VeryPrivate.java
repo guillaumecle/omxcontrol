@@ -14,7 +14,9 @@ public abstract class VeryPrivate<V> {
 		this.value = value;
 		onUpdate();
 	}
+
 	public V get() {
 		return value;
 	}
+
 }

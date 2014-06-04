@@ -1,12 +1,12 @@
 package com.cguillaume.omxcontrol.model;
 
-import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 
 @Singleton
 public class Player extends Observable implements Observer {
@@ -21,7 +21,7 @@ public class Player extends Observable implements Observer {
 		@Override
 		protected void onUpdate() {
 			Player.this.setChanged();
-			Player.this.notifyObservers(new WebSocketActionWrapper("updateCurrent", current.get()));
+			Player.this.notifyObservers(new WebSocketActionWrapper("updateCurrent", value));
 		}
 	};
 
@@ -31,7 +31,7 @@ public class Player extends Observable implements Observer {
 		} else {
 			if (playlist.isNotEmpty()) {
 				if (!current.get().equals(playlist.size())) {
-					current.set(current.get() + 1);
+					incrementCurrent();
 				} else {
 					current.set(0);
 				}
@@ -40,12 +40,16 @@ public class Player extends Observable implements Observer {
 		}
 	}
 
-	public void addTrack(String track) {
-		playlist.add(track);
+	private void incrementCurrent() {
+		current.set(current.get() + 1);
 	}
 
 	private void startCurrent() {
 		synthesizer.startPlaying(playlist.get(current.get()));
+	}
+
+	public void addTrack(String track) {
+		playlist.add(track);
 	}
 
 	public Integer getCurrent() {
@@ -54,7 +58,15 @@ public class Player extends Observable implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
+		if (o instanceof Synthesizer && arg != null && arg instanceof WebSocketActionWrapper) {
+			WebSocketActionWrapper wsac = (WebSocketActionWrapper) arg;
+			if (wsac.getAction().equals("aliveChanged") && wsac.getMessage().equals("false")) {
+				if (playlist.size() > current.get() + 1) {
+					incrementCurrent();
+					startCurrent();
+				}
+			}
+		}
 	}
 
 }

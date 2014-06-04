@@ -70,6 +70,11 @@ public class WebSocket extends WebSocketAdapter implements Observer {
 	}
 
 	@Override
+	public void onWebSocketBinary(byte[] payload, int offset, int len) {
+		webSocketHandler.handleBinary(payload, offset, len);
+	}
+
+	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
 		super.onWebSocketClose(statusCode, reason);
 		webSocketManager.unregister(this);
@@ -86,7 +91,7 @@ public class WebSocket extends WebSocketAdapter implements Observer {
 		try {
 			getRemote().sendString(gson.toJson(actionWraper));
 		} catch (Exception e) {
-			logger.error("Error sending websocket message", e);
+			logger.error("Error sending websocket : " + gson.toJson(actionWraper), e);
 		}
 	}
 

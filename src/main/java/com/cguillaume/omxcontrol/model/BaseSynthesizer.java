@@ -13,14 +13,14 @@ public abstract class BaseSynthesizer extends Synthesizer {
 		@Override
 		protected void onUpdate() {
 			BaseSynthesizer.this.setChanged();
-			BaseSynthesizer.this.notifyObservers();
+			BaseSynthesizer.this.notifyObservers(new WebSocketActionWrapper("aliveChanged", value));
 		}
 	};
 	protected final VeryPrivate<Boolean> playing = new VeryPrivate<Boolean>(false) {
 		@Override
 		protected void onUpdate() {
 			BaseSynthesizer.this.setChanged();
-			BaseSynthesizer.this.notifyObservers(new WebSocketActionWrapper("playingChanged", playing.get()));
+			BaseSynthesizer.this.notifyObservers(new WebSocketActionWrapper("playingChanged", value));
 		}
 	};
 

@@ -1,7 +1,8 @@
 package com.cguillaume.omxcontrol.model;
 
-import javax.inject.Singleton;
 import java.io.IOException;
+
+import javax.inject.Singleton;
 
 @Singleton
 public class MPlayerSynthesizer extends BaseSynthesizer {

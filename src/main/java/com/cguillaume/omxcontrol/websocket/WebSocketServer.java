@@ -22,6 +22,13 @@ public class WebSocketServer {
 		ServletHolder holder = new ServletHolder("ws", new WebSocketServlet() {
 			@Override
 			public void configure(WebSocketServletFactory factory) {
+				factory.getPolicy().setMaxBinaryMessageSize(Integer.MAX_VALUE);
+//				factory.setCreator(new WebSocketCreator() { //TODO can be better for juice injection
+//					@Override
+//					public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
+//						return null;
+//					}
+//				});
 				factory.register(WebSocket.class);
 			}
 		});
