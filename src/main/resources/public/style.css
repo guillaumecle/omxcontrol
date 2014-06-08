@@ -4,3 +4,10 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+#jobs {
+	max-width: 400px;
+}
+progress {
+	width: 100%;
+}

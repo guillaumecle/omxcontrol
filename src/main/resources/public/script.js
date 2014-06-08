@@ -22,6 +22,15 @@ function rebuildPlayIcon() {
 		td.textContent = index == current ? playing ? '▶' : 'P' : '';
 	});
 }
+function addJob(job) {
+	var div = jQuery('<div>').attr('id','job' + job.id)
+		.append(jQuery('<span>').text(job.name))
+		.append(jQuery('<progress>'));
+	jQuery('#jobs').append(div);
+}
+function updateJob(job) {
+	jQuery('#job'+job.id).find('progress').attr('value', 1);
+}
 // *************** control *************
 function addFromLib(elem) {
     omxWS.sendAction('add', elem.textContent)
@@ -34,19 +43,16 @@ function add(elem) {
 }
 function addFile(elem) {
 	var fileFilst = elem.previousElementSibling.files;
-	console.log(fileFilst[0]);
 	if (fileFilst.length > 0) {
-		omxWS.sendAction("uploadFile", fileFilst[0]);
+		var job = {
+			jsFile : fileFilst[0],
+			name : 'Upload of ' + fileFilst[0].name,
+			id : Math.round(new Date().getTime() * Math.random())
+		};
+		addJob(job);
+		omxWS.sendAction("uploadFile", job);
 		omxWS.send(fileFilst[0]);
-//		var form = new FormData();
-//		form.append("name", "Nicholas");
-//		form.append('file', fileFilst[0]);
-//		var xhr = new XMLHttpRequest();
-//		xhr.onprogress = function () {
-//			console.log(arguments);
-//		};
-//		xhr.open('post', '/file', true);
-//		xhr.send(form);
+
 	}
 }
 // ******* websocket api *****************
@@ -80,4 +86,11 @@ updateCurrent = function(current) {
 playingChanged = function(playing) {
 	window.playing = playing;
 	rebuildPlayIcon();
+};
+uploadCompleted = function(job) {
+	var li = jQuery('<li>').append(jQuery('<a>').text(job.jsFile.name).click(function() {
+		addFromLib(this);
+	}));
+	updateJob(job);
+	jQuery('#library').append(li);
 };

@@ -1,9 +1,10 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="src/main/resources/public/style.css"/>
+	<meta charset="utf-8">
     <title>Omx control</title>
-    <script src="jquery-1.11.1.min.js"></script>
+    <script src="jquery-2.1.1.js"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +12,7 @@
 <h4>
 	Library (${freeSpace})
 </h4>
-<ul>
+<ul id="library">
 <#list lib as item>
     <li>
         <a onclick="addFromLib(this)">${item}</a>
@@ -55,5 +56,7 @@
 <h4>
 	Job(s)
 </h4>
+<div id="jobs">
+</div>
 </body>
 </html>

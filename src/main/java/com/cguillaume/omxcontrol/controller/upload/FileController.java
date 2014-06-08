@@ -11,7 +11,6 @@ import spark.Route;
 
 public class FileController implements Route{
 
-
 	@Override
 	public Object handle(Request request, Response response) {
 		QueryParamsMap map = request.queryMap();

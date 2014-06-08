@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.controller.upload.JsFile;
+import com.cguillaume.omxcontrol.controller.upload.UploadJob;
 import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
 import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
@@ -39,8 +39,8 @@ public class MainWSHandler extends WebSocketHandler {
 	}
 
 	@Handler
-	public void uploadFile(JsFile jsFile) {
-		uploadQueue.addName(jsFile.size, jsFile.name);
+	public void uploadFile(UploadJob uploadJob) {
+		uploadQueue.addJob(uploadJob);
 	}
 
 	@Override

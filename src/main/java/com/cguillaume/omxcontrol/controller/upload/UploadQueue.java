@@ -18,31 +18,32 @@ public class UploadQueue extends Observable {
 	private Config config;
 
 	private Map<Long, File> files = new TreeMap<>();
-	private Map<Long, String> names = new TreeMap<>();
+	private Map<Long, UploadJob> jobs = new TreeMap<>();
 
 	public void addFile(Long size, File file) {
-		String name = names.get(size);
-		if (name != null) {
-			renameFile(file, name);
+		UploadJob uploadJob = jobs.get(size);
+		if (uploadJob != null) {
+			renameFile(file, uploadJob);
 		} else {
 			files.put(size, file);
 		}
 	}
 
-	public void addName(Long size, String name) {
-		File file = files.get(size);
+	public void addJob(UploadJob uploadJob) {
+		File file = files.get(uploadJob.jsFile.size);
 		if (file != null) {
-			renameFile(file, name);
+			renameFile(file, uploadJob);
 		} else {
-			names.put(size, name);
+			jobs.put(uploadJob.jsFile.size, uploadJob);
 		}
 	}
 
-	private void renameFile(File file, String name) {
-		String finalName = config.getLibraryLocation() + File.separator + name;
+	private void renameFile(File file, UploadJob uploadJob) {
+		String finalName = config.getLibraryLocation() + File.separator + uploadJob.jsFile.name;
 		file.renameTo(new File(finalName));
 		setChanged();
-		notifyObservers(new WebSocketActionWrapper("upload", new JsFile(finalName, file.length())));
+		uploadJob.jsFile.name = finalName;
+		notifyObservers(new WebSocketActionWrapper("uploadCompleted", uploadJob));
 	}
 
 }
