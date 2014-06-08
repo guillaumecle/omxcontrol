@@ -1,43 +1,88 @@
 package com.cguillaume.omxcontrol.youtube;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.controller.YoutubeJob;
+import com.cguillaume.omxcontrol.controller.upload.Job;
+import com.cguillaume.omxcontrol.model.VeryPrivate;
+import com.cguillaume.omxcontrol.proc.StreamReader;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import com.cguillaume.omxcontrol.websocket.WebSocketManager;
+import com.google.inject.Inject;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import java.util.Scanner;
 
-public class YoutubeDownloader extends Thread {
+public class YoutubeDownloader extends Observable implements Runnable {
 
+	@Inject
+	private Config config;
+	private WebSocketManager webSocketManager;
+
+	private YoutubeJob job;
 	private URL youtubeUrl;
 	private URL audioUrl;
+	private String fileName;
 	private DownloadStatus status;
 	private int contentLength;
-	private int size;
+	private VeryPrivate<Integer> size = new VeryPrivate<Integer>(0) {
 
-	public YoutubeDownloader(String url) {
-		try {
-			this.youtubeUrl = new URL(url);
-		} catch (MalformedURLException e) {
-			fail(e);
-			return;
+		private int lastValue = 0;
+
+		@Override
+		protected void onUpdate() {
+			job.progress = 100 * value / contentLength;
+			if(job.progress != lastValue) {
+				lastValue = job.progress;
+				YoutubeDownloader.this.setChanged();
+				YoutubeDownloader.this.notifyObservers(new WebSocketActionWrapper("downloadProgress", job));
+			}
 		}
-		this.status = DownloadStatus.WAITING;
+	};
+
+	@Inject
+	public YoutubeDownloader(WebSocketManager webSocketManager) {
+		this.webSocketManager = webSocketManager;
+		if (webSocketManager != null) {
+			webSocketManager.addObservable(this);
+		}
 	}
 
 	private void fail(Exception e) {
 		this.status = DownloadStatus.FAILED;
 		e.printStackTrace();
+		forgotMe();
+	}
+
+	public void init(YoutubeJob youtubeJob) {
+		init(youtubeJob.url);
+		bindJob(youtubeJob);
+	}
+
+	public YoutubeDownloader init(String url) {
+		try {
+			this.youtubeUrl = new URL(url);
+		} catch (MalformedURLException e) {
+			fail(e);
+			return this;
+		}
+		this.status = DownloadStatus.WAITING;
+		return this;
+	}
+
+	private void bindJob(YoutubeJob job) {
+		this.job = job;
 	}
 
 	@Override
 	public void run() {
-		this.status = DownloadStatus.DOWNLOADING;
 		try {
-			this.audioUrl = getAudioUrl();
+			retrieveAudioUrlAndTitle();
 		} catch (IOException e) {
 			fail(e);
 			return;
@@ -49,39 +94,42 @@ public class YoutubeDownloader extends Thread {
 			return;
 		}
 		status = DownloadStatus.SUCCESS;
+		forgotMe();
 	}
 
 	public void download() throws IOException {
+		status = DownloadStatus.DOWNLOADING;
 		URLConnection connection = audioUrl.openConnection();
 		contentLength = connection.getContentLength();
 		connection.connect();
-		Random random = new Random();
-		OutputStream writer = new FileOutputStream("/music/" + random.nextInt(Integer.MAX_VALUE) + ".mp3");
+		OutputStream writer = new FileOutputStream(fileName);
 		InputStream stream = connection.getInputStream();
 		int read;
 		byte[] bytes = new byte[1024];
-		size = 0;
 		while ((read = stream.read(bytes)) != -1) {
 			writer.write(bytes, 0, read);
-			size += read;
+			size.set(size.get() + read);
 		}
 		writer.close();
 		stream.close();
 	}
 
-	// youtube-dl --get-filename -o "%(title)s.%(ext)s" -f 140 -g R-pNnA-LcDs
-	private URL getAudioUrl() throws IOException {
-		Process proc = Runtime.getRuntime().exec("youtube-dl -f 140 -g " + youtubeUrl);
-		try (Scanner s = new Scanner(proc.getInputStream()).useDelimiter("\\A")) {
-			return new URL(s.hasNext() ? s.next() : "");
+	private void retrieveAudioUrlAndTitle() throws IOException {
+		status = DownloadStatus.WAITING_FOR_METADATA;
+		Process proc = Runtime.getRuntime().exec("youtube-dl --get-filename -o \"%(title)s.%(ext)s\" -f 140 -g " + youtubeUrl);
+		try (Scanner s = new Scanner(proc.getInputStream()).useDelimiter("\\n")) {
+			audioUrl = new URL(s.hasNext() ? s.next() : "");
+			fileName = config.getLibraryLocation() + File.separator + (s.hasNext() ? s.next() : "");
 		}
-	}
-
-	public int progress() {
-		return 100*size/contentLength;
 	}
 
 	public DownloadStatus status(){
 		return status;
+	}
+
+	private void forgotMe() {
+		if (webSocketManager != null) {
+			webSocketManager.deleteObservable(this);
+		}
 	}
 }

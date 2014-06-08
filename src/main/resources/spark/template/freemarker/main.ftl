@@ -20,13 +20,12 @@
 </#list>
 </ul>
 <p>
-	<input type="file">
-	<a onclick="addFile(this)">Add to library</a>
+	<input type="file" onchange="addFile(this)">
 </p>
-<#--<p>-->
-<#--<input/>-->
-<#--<a onclick="add(this)">Add to playlist</a>-->
-<#--</p>-->
+<p>
+	<input/>
+	<a onclick="add(this)">Add to playlist</a>
+</p>
 <h4>
 	Playlist
 </h4>

@@ -15,7 +15,7 @@ public class YoutubeController implements Route {
 		if (url == null) {
 			return form();
 		}
-		new YoutubeDownloader(url).start();
+		new Thread(new YoutubeDownloader(null).init(url)).start();
 		response.redirect("/youtube");
 		return "";
 	}

@@ -25,11 +25,11 @@ function rebuildPlayIcon() {
 function addJob(job) {
 	var div = jQuery('<div>').attr('id','job' + job.id)
 		.append(jQuery('<span>').text(job.name))
-		.append(jQuery('<progress>'));
+		.append(jQuery('<progress>').attr('max', 100));
 	jQuery('#jobs').append(div);
 }
 function updateJob(job) {
-	jQuery('#job'+job.id).find('progress').attr('value', 1);
+	jQuery('#job'+job.id).find('progress').attr('value', job.progress);
 }
 // *************** control *************
 function addFromLib(elem) {
@@ -39,10 +39,16 @@ function pause() {
     omxWS.sendAction('pause');
 }
 function add(elem) {
-    console.log(elem.previousSibling.previousSibling.value);
+	var job = {
+		name : 'Download of ' + elem.previousSibling.previousSibling.value,
+		id : Math.round(new Date().getTime() * Math.random()),
+		url : elem.previousSibling.previousSibling.value
+	};
+	omxWS.sendAction('dlFromYoutube', job);
+	addJob(job);
 }
 function addFile(elem) {
-	var fileFilst = elem.previousElementSibling.files;
+	var fileFilst = elem.files;
 	if (fileFilst.length > 0) {
 		var job = {
 			jsFile : fileFilst[0],
@@ -52,7 +58,6 @@ function addFile(elem) {
 		addJob(job);
 		omxWS.sendAction("uploadFile", job);
 		omxWS.send(fileFilst[0]);
-
 	}
 }
 // ******* websocket api *****************
@@ -94,3 +99,4 @@ uploadCompleted = function(job) {
 	updateJob(job);
 	jQuery('#library').append(li);
 };
+downloadProgress = updateJob;

@@ -1,5 +1,5 @@
 package com.cguillaume.omxcontrol.youtube;
 
 public enum DownloadStatus {
-	WAITING, DOWNLOADING, SUCCESS, FAILED
+	WAITING, WAITING_FOR_METADATA, DOWNLOADING, SUCCESS, FAILED
 }

@@ -15,6 +15,7 @@ import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.websocket.Handler;
 import com.cguillaume.omxcontrol.websocket.WebSocketHandler;
+import com.cguillaume.omxcontrol.youtube.YoutubeDownloader;
 
 @Singleton
 public class MainWSHandler extends WebSocketHandler {
@@ -27,6 +28,8 @@ public class MainWSHandler extends WebSocketHandler {
 	private UploadQueue uploadQueue;
 	@Inject
 	private Config config;
+	@Inject
+	private YoutubeDownloader youtubeDownloader;
 
 	@Handler
 	public void pause() {
@@ -43,6 +46,11 @@ public class MainWSHandler extends WebSocketHandler {
 		uploadQueue.addJob(uploadJob);
 	}
 
+	@Handler
+	public void dlFromYoutube(YoutubeJob youtubeJob) {
+		youtubeDownloader.init(youtubeJob);
+		youtubeDownloader.run();
+	}
 	@Override
 	public void handleBinary(byte[] payload, int offset, int len) {
 		File file = new File(config.getTempDirLocation() + File.separator + System.currentTimeMillis() + System.nanoTime());

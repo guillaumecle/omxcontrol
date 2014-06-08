@@ -6,40 +6,48 @@ import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
 import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.model.Synthesizer;
+import com.cguillaume.omxcontrol.youtube.YoutubeDownloader;
 import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 @Singleton
 public class WebSocketManager {
 
-	private Synthesizer synthesizer;
-	private Playlist playlist;
-	private Player player;
-	private UploadQueue uploadQueue;
+//	private List<WebSocket> webSockets = new ArrayList<>();
+	private List<Observable> observables = new ArrayList<>();
 
 	@Inject
 	public WebSocketManager(Synthesizer synthesizer, Playlist playlist, Player player, UploadQueue uploadQueue) {
-		this.synthesizer = synthesizer;
-		this.playlist = playlist;
-		this.player = player;
-		this.uploadQueue = uploadQueue;
+		observables.add(synthesizer);
+		observables.add(playlist);
+		observables.add(player);
+		observables.add(uploadQueue);
 		synthesizer.addObserver(player);
 	}
-//	private List<WebSocket> webSockets = new ArrayList<>();
 
 	public void register(WebSocket webSocket) {
-		synthesizer.addObserver(webSocket);
-		playlist.addObserver(webSocket);
-		player.addObserver(webSocket);
-		uploadQueue.addObserver(webSocket);
+		for (Observable observable : observables) {
+			observable.addObserver(webSocket);
+		}
 //		webSockets.add(webSocket);
 	}
 
 	public void unregister(WebSocket webSocket) {
-		synthesizer.deleteObserver(webSocket);
-		playlist.deleteObserver(webSocket);
-		player.deleteObserver(webSocket);
-		uploadQueue.deleteObserver(webSocket);
+		for (Observable observable : observables) {
+			observable.deleteObserver(webSocket);
+		}
 //		webSockets.remove(webSocket);
+	}
+
+	public void addObservable(Observable observable) {
+		observables.add(observable);
+	}
+
+	public void deleteObservable(Observable observable) {
+		observables.remove(observable);
 	}
 //
 //	public void sendToAll(WebSocketActionWrapper actionWraper) {

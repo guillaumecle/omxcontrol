@@ -2,11 +2,7 @@ package com.cguillaume.omxcontrol.controller;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import spark.ModelAndView;
 import spark.Request;
@@ -22,7 +18,13 @@ import com.google.inject.Inject;
 
 public class MainController implements TemplateViewRoute {
 
-	private static final FilenameFilter audioFileFilter = (dir, name) -> name.endsWith(".mp3");
+	private static final List<String> allowedExtensions = Arrays.asList("mp3", "m4a");
+
+	private static final FilenameFilter audioFileFilter = (dir, name) -> {
+		String[] split = name.split("\\.");
+		String extension = split[split.length - 1];
+		return allowedExtensions.contains(extension);
+	};
 
 	@Inject
 	private Playlist playlist;
