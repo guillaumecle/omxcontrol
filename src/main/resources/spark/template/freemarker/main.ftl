@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="src/main/resources/public/style.css"/>
 	<meta charset="utf-8">
     <title>Omx control</title>
     <script src="jquery-2.1.1.js"></script>
