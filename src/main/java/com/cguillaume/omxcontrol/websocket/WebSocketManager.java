@@ -6,6 +6,7 @@ import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
 import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.model.Synthesizer;
+import com.cguillaume.omxcontrol.model.Volume;
 import com.cguillaume.omxcontrol.youtube.YoutubeDownloader;
 import com.google.inject.Singleton;
 
@@ -20,11 +21,12 @@ public class WebSocketManager {
 	private List<Observable> observables = new ArrayList<>();
 
 	@Inject
-	public WebSocketManager(Synthesizer synthesizer, Playlist playlist, Player player, UploadQueue uploadQueue) {
+	public WebSocketManager(Synthesizer synthesizer, Playlist playlist, Player player, UploadQueue uploadQueue, Volume volume) {
 		observables.add(synthesizer);
 		observables.add(playlist);
 		observables.add(player);
 		observables.add(uploadQueue);
+		observables.add(volume);
 		synthesizer.addObserver(player);
 	}
 

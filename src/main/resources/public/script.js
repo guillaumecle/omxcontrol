@@ -31,6 +31,9 @@ function addJob(job) {
 function updateJob(job) {
 	jQuery('#job'+job.id).find('progress').attr('value', job.progress);
 }
+function setVolume(volume) {
+	jQuery('#volume').text(volume + '%');
+}
 // *************** control *************
 function addFromLib(elem) {
     omxWS.sendAction('add', elem.textContent)
@@ -100,3 +103,4 @@ uploadCompleted = function(job) {
 	jQuery('#library').append(li);
 };
 downloadProgress = updateJob;
+volumeUpdated = setVolume;

@@ -51,6 +51,12 @@
 </#list>
 </table>
 <a onclick="pause()">&#9654; play/pause</a>
+<p>
+	Volmune : <span id="volume">${volume}%</span>
+	<button onclick="omxWS.sendAction('changeVolume', false)">-</button>
+	<button onclick="omxWS.sendAction('changeVolume', true)">+</button>
+	<span></span>
+</p>
 <h4>
 	Job(s)
 </h4>

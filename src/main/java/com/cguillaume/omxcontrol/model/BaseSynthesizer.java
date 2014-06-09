@@ -6,8 +6,12 @@ import java.io.PrintWriter;
 import com.cguillaume.omxcontrol.proc.ErrReader;
 import com.cguillaume.omxcontrol.proc.StdReader;
 import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import com.google.inject.Inject;
 
 public abstract class BaseSynthesizer extends Synthesizer {
+
+	@Inject
+	protected Volume volume;
 
 	protected final VeryPrivate<Boolean> alive = new VeryPrivate<Boolean>(false) {
 		@Override
@@ -28,7 +32,8 @@ public abstract class BaseSynthesizer extends Synthesizer {
 	protected PrintWriter clavier;
 
 	protected void createProcess(String command, String trackFile) throws IOException {
-		ProcessBuilder processBuilder = new ProcessBuilder(command, trackFile);
+		String volumeCommand = "-volume";
+		ProcessBuilder processBuilder = new ProcessBuilder(command, volumeCommand, volume.getValue().toString(), trackFile);
 		playerProcess = processBuilder.start();
 		StdReader std = new StdReader(playerProcess);
 //		std.addNewLineListener(logger::info);

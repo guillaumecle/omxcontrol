@@ -42,6 +42,7 @@ public class UploadQueue extends Observable {
 		String finalName = config.getLibraryLocation() + File.separator + uploadJob.jsFile.name;
 		file.renameTo(new File(finalName));
 		setChanged();
+		uploadJob.progress = 100;
 		uploadJob.jsFile.name = finalName;
 		notifyObservers(new WebSocketActionWrapper("uploadCompleted", uploadJob));
 	}

@@ -35,4 +35,22 @@ public class MPlayerSynthesizer extends BaseSynthesizer {
 		alive.set(false);
 	}
 
+	@Override
+	public void increaseVolume() {
+		if (volume.getValue() != 100) {
+			if (alive.get()) {
+				clavier.printf("0");
+			}
+			volume.increased();
+		}
+	}
+
+	@Override
+	public void decreaseVolume() {
+		if (alive.get()) {
+			clavier.printf("9");
+		}
+		volume.decreased();
+	}
+
 }

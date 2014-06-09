@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
 
+import com.cguillaume.omxcontrol.model.Volume;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -36,6 +37,8 @@ public class MainController implements TemplateViewRoute {
 	private Config config;
 	@Inject
 	private Util util;
+	@Inject
+	private Volume volume;
 
 	@Override
 	public ModelAndView handle(Request request, Response response) {
@@ -45,6 +48,7 @@ public class MainController implements TemplateViewRoute {
 		Collections.addAll(lib, folder.listFiles(audioFileFilter));
 		model.put("lib", lib);
 
+		model.put("volume", volume.getValue());
 		model.put("playing", Boolean.toString(synthesizer.isPlaying()));
 		model.put("list", playlist.getList());
 		model.put("current", player.getCurrent());
