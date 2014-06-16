@@ -1,5 +1,9 @@
 package com.cguillaume.omxcontrol.websocket;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
 import javax.inject.Inject;
 
 import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
@@ -7,12 +11,7 @@ import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.model.Synthesizer;
 import com.cguillaume.omxcontrol.model.Volume;
-import com.cguillaume.omxcontrol.youtube.YoutubeDownloader;
 import com.google.inject.Singleton;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 
 @Singleton
 public class WebSocketManager {

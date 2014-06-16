@@ -69,5 +69,10 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.7</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.javamusictag</groupId>
+			<artifactId>jid3lib</artifactId>
+			<version>0.5.4</version>
+		</dependency>
 	</dependencies>
 </project>

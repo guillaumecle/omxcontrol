@@ -1,22 +1,22 @@
 package com.cguillaume.omxcontrol.youtube;
 
-import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.controller.YoutubeJob;
-import com.cguillaume.omxcontrol.controller.upload.Job;
-import com.cguillaume.omxcontrol.model.VeryPrivate;
-import com.cguillaume.omxcontrol.proc.StreamReader;
-import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
-import com.cguillaume.omxcontrol.websocket.WebSocketManager;
-import com.google.inject.Inject;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
 import java.util.Scanner;
+
+import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.controller.YoutubeJob;
+import com.cguillaume.omxcontrol.model.VeryPrivate;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import com.cguillaume.omxcontrol.websocket.WebSocketManager;
+import com.google.inject.Inject;
 
 public class YoutubeDownloader extends Observable implements Runnable {
 

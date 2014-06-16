@@ -36,7 +36,7 @@ function setVolume(volume) {
 }
 // *************** control *************
 function addFromLib(elem) {
-    omxWS.sendAction('add', elem.textContent)
+    omxWS.sendAction('add', elem.id)
 }
 function pause() {
     omxWS.sendAction('pause');

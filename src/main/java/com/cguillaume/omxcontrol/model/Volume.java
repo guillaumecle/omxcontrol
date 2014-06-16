@@ -1,9 +1,10 @@
 package com.cguillaume.omxcontrol.model;
 
-import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import java.util.Observable;
 
 import javax.inject.Singleton;
-import java.util.Observable;
+
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 
 @Singleton
 public class Volume extends Observable {

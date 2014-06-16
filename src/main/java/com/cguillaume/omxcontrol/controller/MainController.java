@@ -2,9 +2,12 @@ package com.cguillaume.omxcontrol.controller;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.*;
 
-import com.cguillaume.omxcontrol.model.Volume;
+import com.cguillaume.omxcontrol.model.*;
+import org.farng.mp3.MP3File;
+import org.farng.mp3.TagException;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -12,9 +15,6 @@ import spark.TemplateViewRoute;
 
 import com.cguillaume.omxcontrol.Config;
 import com.cguillaume.omxcontrol.Util;
-import com.cguillaume.omxcontrol.model.Player;
-import com.cguillaume.omxcontrol.model.Playlist;
-import com.cguillaume.omxcontrol.model.Synthesizer;
 import com.google.inject.Inject;
 
 public class MainController implements TemplateViewRoute {
@@ -42,10 +42,12 @@ public class MainController implements TemplateViewRoute {
 
 	@Override
 	public ModelAndView handle(Request request, Response response) {
-		Map<String, Object> model = new TreeMap<>();
+		Map<String, Object> model = new HashMap<>();
 		File folder = new File(config.getLibraryLocation());
-		List<File> lib = new ArrayList<>();
-		Collections.addAll(lib, folder.listFiles(audioFileFilter));
+		List<Mp3Metadata> lib = new ArrayList<>();
+		for (File file : folder.listFiles(audioFileFilter)) {
+			lib.add(getPrettyText(file));
+		}
 		model.put("lib", lib);
 
 		model.put("volume", volume.getValue());
@@ -54,6 +56,64 @@ public class MainController implements TemplateViewRoute {
 		model.put("current", player.getCurrent());
 		model.put("freeSpace", util.getFreeSpace());
 		return new ModelAndView(model, "main.ftl");
+	}
+
+	private Mp3Metadata getPrettyText(File file) {
+		MP3File mp3File = null;
+		String albun = null;
+		String artist = null;
+		String title = null;
+		String track = null;
+		try {
+			mp3File = new MP3File(file);
+			albun = getAlbum(mp3File);
+			artist = getArtist(mp3File);
+			title = getTitle(mp3File);
+			track = getTrackNumber(mp3File);
+		} catch (IOException | TagException e) {
+			e.printStackTrace();
+		}
+		return new Mp3Metadata(file.getAbsolutePath(), albun, artist, title, track);
+	}
+
+	private String getAlbum(MP3File mp3File) {
+		if (mp3File.getID3v1Tag() != null) {
+			return mp3File.getID3v1Tag().getAlbumTitle();
+		} else if (mp3File.getID3v2Tag() != null) {
+			return mp3File.getID3v2Tag().getAlbumTitle();
+		} else {
+			return null;
+		}
+	}
+
+	private String getArtist(MP3File mp3File) {
+		if (mp3File.getID3v1Tag() != null) {
+			return mp3File.getID3v1Tag().getArtist();
+		} else if (mp3File.getID3v2Tag() != null) {
+			return mp3File.getID3v2Tag().getLeadArtist();
+		} else {
+			return null;
+		}
+	}
+
+	private String getTitle(MP3File mp3File) {
+		if (mp3File.getID3v1Tag() != null) {
+			return mp3File.getID3v1Tag().getSongTitle();
+		} else if (mp3File.getID3v2Tag() != null) {
+			return mp3File.getID3v2Tag().getSongTitle();
+		} else {
+			return null;
+		}
+	}
+
+	private String getTrackNumber(MP3File mp3File) {
+		if (mp3File.getID3v1Tag() != null) {
+			return mp3File.getID3v1Tag().getTrackNumberOnAlbum();
+		} else if (mp3File.getID3v2Tag() != null) {
+			return mp3File.getID3v2Tag().getTrackNumberOnAlbum();
+		} else {
+			return null;
+		}
 	}
 
 }

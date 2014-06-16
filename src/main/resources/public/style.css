@@ -11,3 +11,14 @@ a:hover {
 progress {
 	width: 100%;
 }
+ul#library li{
+	list-style-type: none;
+	margin-bottom: 2px;
+	max-width: 400px;
+	cursor: pointer;
+	background: silver;
+}
+ul#library li:hover{
+	text-decoration: underline;
+	background: gray;
+}

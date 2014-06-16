@@ -1,3 +1,9 @@
+<#-- @ftlvariable name="volume" type="java.lang.Number" -->
+<#-- @ftlvariable name="list" type="java.util.Collection<java.lang.String>" -->
+<#-- @ftlvariable name="playing" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="current" type="java.lang.Number" -->
+<#-- @ftlvariable name="freeSpace" type="java.lang.String" -->
+<#-- @ftlvariable name="lib" type="java.util.Collection<com.cguillaume.omxcontrol.model.Mp3Metadata>" -->
 <!doctype html>
 <html>
 <head>
@@ -13,8 +19,16 @@
 </h4>
 <ul id="library">
 <#list lib as item>
-    <li>
-        <a onclick="addFromLib(this)">${item}</a>
+    <li onclick="addFromLib(this)" id="${item.filePath}">
+		<#if item.title??!>
+			${item.title}
+			<#if item.artist??!>
+				<br>
+				${item.artist}
+			</#if>
+		<#else>
+			${item.filePath}
+		</#if>
     </li>
 </#list>
 </ul>
@@ -45,14 +59,14 @@
         	</#if>
         </td>
 		<td>
-	        <a onclick="startFrom(${item_index})">${item}</a>
+	        <a>${item}</a>
 		</td>
     </tr>
 </#list>
 </table>
 <a onclick="pause()">&#9654; play/pause</a>
 <p>
-	Volmune : <span id="volume">${volume}%</span>
+	Volume : <span id="volume">${volume}%</span>
 	<button onclick="omxWS.sendAction('changeVolume', false)">-</button>
 	<button onclick="omxWS.sendAction('changeVolume', true)">+</button>
 	<span></span>
