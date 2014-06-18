@@ -59,7 +59,7 @@ public class MainController implements TemplateViewRoute {
 	}
 
 	private Mp3Metadata getPrettyText(File file) {
-		MP3File mp3File = null;
+		MP3File mp3File;
 		String albun = null;
 		String artist = null;
 		String title = null;

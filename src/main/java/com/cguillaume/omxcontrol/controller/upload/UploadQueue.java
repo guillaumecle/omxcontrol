@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.job.UploadJob;
 import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 
 @Singleton
@@ -20,19 +21,21 @@ public class UploadQueue extends Observable {
 	private Map<Long, File> files = new TreeMap<>();
 	private Map<Long, UploadJob> jobs = new TreeMap<>();
 
-	public void addFile(Long size, File file) {
-		UploadJob uploadJob = jobs.get(size);
+	public void addFile(File file) {
+		UploadJob uploadJob = jobs.remove(file.length());
 		if (uploadJob != null) {
 			renameFile(file, uploadJob);
+			files.remove(file.length());
 		} else {
-			files.put(size, file);
+			files.put(file.length(), file);
 		}
 	}
 
 	public void addJob(UploadJob uploadJob) {
-		File file = files.get(uploadJob.jsFile.size);
+		File file = files.remove(uploadJob.jsFile.size);
 		if (file != null) {
 			renameFile(file, uploadJob);
+			jobs.remove(uploadJob.jsFile.size);
 		} else {
 			jobs.put(uploadJob.jsFile.size, uploadJob);
 		}

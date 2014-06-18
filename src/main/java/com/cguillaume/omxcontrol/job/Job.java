@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol.controller.upload;
+package com.cguillaume.omxcontrol.job;
 
 public class Job {
 

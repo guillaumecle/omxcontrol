@@ -1,6 +1,6 @@
 package com.cguillaume.omxcontrol.controller;
 
-import com.cguillaume.omxcontrol.controller.upload.Job;
+import com.cguillaume.omxcontrol.job.Job;
 
 public class YoutubeJob extends Job {
 
