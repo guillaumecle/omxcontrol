@@ -48,10 +48,6 @@ public class Player extends Observable implements Observer {
 		synthesizer.startPlaying(playlist.get(current.get()));
 	}
 
-	public void addTrack(String track) {
-		playlist.add(track);
-	}
-
 	public Integer getCurrent() {
 		return current.get();
 	}

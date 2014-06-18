@@ -28,7 +28,14 @@ public class YoutubeDownloader extends Observable implements Runnable {
 	private URL youtubeUrl;
 	private URL audioUrl;
 	private String fileName;
-	private DownloadStatus status;
+	private VeryPrivate<DownloadStatus> status = new VeryPrivate<DownloadStatus>(DownloadStatus.UNINITIALIZED) {
+		@Override
+		protected void onUpdate() {
+			job.status = value;
+			YoutubeDownloader.this.setChanged();
+			YoutubeDownloader.this.notifyObservers(new WebSocketActionWrapper("downloadProgress", job));
+		}
+	};
 	private int contentLength;
 	private VeryPrivate<Integer> size = new VeryPrivate<Integer>(0) {
 
@@ -44,39 +51,40 @@ public class YoutubeDownloader extends Observable implements Runnable {
 			}
 		}
 	};
+	private VeryPrivate<String> name = new VeryPrivate<String>(null) {
+		@Override
+		protected void onUpdate() {
+			job.name = value;
+			YoutubeDownloader.this.setChanged();
+			YoutubeDownloader.this.notifyObservers(new WebSocketActionWrapper("downloadProgress", job));
+		}
+	};
 
 	@Inject
 	public YoutubeDownloader(WebSocketManager webSocketManager) {
 		this.webSocketManager = webSocketManager;
-		if (webSocketManager != null) {
-			webSocketManager.addObservable(this);
-		}
+		webSocketManager.addObservable(this);
 	}
 
 	private void fail(Exception e) {
-		this.status = DownloadStatus.FAILED;
+		status.set(DownloadStatus.FAILED);
 		e.printStackTrace();
 		forgotMe();
 	}
 
 	public void init(YoutubeJob youtubeJob) {
-		init(youtubeJob.url);
 		bindJob(youtubeJob);
-	}
-
-	public YoutubeDownloader init(String url) {
 		try {
-			this.youtubeUrl = new URL(url);
+			this.youtubeUrl = new URL(youtubeJob.url);
 		} catch (MalformedURLException e) {
 			fail(e);
-			return this;
 		}
-		this.status = DownloadStatus.WAITING;
-		return this;
+		status.set(DownloadStatus.WAITING);
 	}
 
 	private void bindJob(YoutubeJob job) {
 		this.job = job;
+		this.name.set(job.name);
 	}
 
 	@Override
@@ -93,12 +101,12 @@ public class YoutubeDownloader extends Observable implements Runnable {
 			fail(e);
 			return;
 		}
-		status = DownloadStatus.SUCCESS;
+		status.set(DownloadStatus.SUCCESS);
 		forgotMe();
 	}
 
 	public void download() throws IOException {
-		status = DownloadStatus.DOWNLOADING;
+		status.set(DownloadStatus.DOWNLOADING);
 		URLConnection connection = audioUrl.openConnection();
 		contentLength = connection.getContentLength();
 		connection.connect();
@@ -115,16 +123,14 @@ public class YoutubeDownloader extends Observable implements Runnable {
 	}
 
 	private void retrieveAudioUrlAndTitle() throws IOException {
-		status = DownloadStatus.WAITING_FOR_METADATA;
+		status.set(DownloadStatus.WAITING_FOR_METADATA);
 		Process proc = Runtime.getRuntime().exec("youtube-dl --get-filename -o \"%(title)s.%(ext)s\" -f 140 -g " + youtubeUrl);
 		try (Scanner s = new Scanner(proc.getInputStream()).useDelimiter("\\n")) {
 			audioUrl = new URL(s.hasNext() ? s.next() : "");
-			fileName = config.getLibraryLocation() + File.separator + (s.hasNext() ? s.next() : "");
+			String videoName = s.hasNext() ? s.next() : "";
+			name.set("Download of " + videoName);
+			fileName = config.getLibraryLocation() + File.separator + videoName;
 		}
-	}
-
-	public DownloadStatus status(){
-		return status;
 	}
 
 	private void forgotMe() {

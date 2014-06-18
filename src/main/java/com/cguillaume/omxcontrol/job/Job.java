@@ -4,5 +4,6 @@ public class Job {
 
 	public Long id;
 	public Integer progress;
+	public String name;
 
 }

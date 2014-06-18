@@ -24,12 +24,16 @@ function rebuildPlayIcon() {
 }
 function addJob(job) {
 	var div = jQuery('<div>').attr('id','job' + job.id)
-		.append(jQuery('<span>').text(job.name))
-		.append(jQuery('<progress>').attr('max', 100));
+		.append(jQuery('<span>').attr('class', 'name').text(job.name))
+		.append(jQuery('<progress>').attr('max', 100))
+		.append(jQuery('<span>').attr('class', 'status').text('Status : ' + job.status));
 	jQuery('#jobs').append(div);
 }
 function updateJob(job) {
-	jQuery('#job'+job.id).find('progress').attr('value', job.progress);
+	var jobDiv = jQuery('#job'+job.id);
+	jobDiv.find('progress').attr('value', job.progress);
+	jobDiv.find('.status').text('Status : ' + job.status);
+	jobDiv.find('.name').text(job.name);
 }
 function setVolume(volume) {
 	jQuery('#volume').text(volume + '%');
@@ -45,7 +49,8 @@ function add(elem) {
 	var job = {
 		name : 'Download of ' + elem.previousSibling.previousSibling.value,
 		id : Math.round(new Date().getTime() * Math.random()),
-		url : elem.previousSibling.previousSibling.value
+		url : elem.previousSibling.previousSibling.value,
+		status : 'UNINITIALIZED'
 	};
 	omxWS.sendAction('dlFromYoutube', job);
 	addJob(job);
@@ -56,7 +61,8 @@ function addFile(elem) {
 		var job = {
 			jsFile : fileFilst[0],
 			name : 'Upload of ' + fileFilst[0].name,
-			id : Math.round(new Date().getTime() * Math.random())
+			id : Math.round(new Date().getTime() * Math.random()),
+			status : 'UNINITIALIZED'
 		};
 		addJob(job);
 		omxWS.sendAction("uploadFile", job);
