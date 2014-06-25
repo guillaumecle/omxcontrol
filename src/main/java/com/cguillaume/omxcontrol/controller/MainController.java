@@ -8,6 +8,9 @@ import java.util.*;
 import com.cguillaume.omxcontrol.model.*;
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
+import org.farng.mp3.id3.AbstractID3v2Frame;
+import org.farng.mp3.id3.FrameBodyAPIC;
+import org.farng.mp3.id3.ID3v2_3Frame;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -60,20 +63,22 @@ public class MainController implements TemplateViewRoute {
 
 	private Mp3Metadata getPrettyText(File file) {
 		MP3File mp3File;
-		String albun = null;
+		String album = null;
 		String artist = null;
 		String title = null;
 		String track = null;
+		String coverBase64 = null;
 		try {
 			mp3File = new MP3File(file);
-			albun = getAlbum(mp3File);
+			album = getAlbum(mp3File);
 			artist = getArtist(mp3File);
 			title = getTitle(mp3File);
 			track = getTrackNumber(mp3File);
+			coverBase64 = getCover(mp3File);
 		} catch (IOException | TagException e) {
 			e.printStackTrace();
 		}
-		return new Mp3Metadata(file.getAbsolutePath(), albun, artist, title, track);
+		return new Mp3Metadata(file.getAbsolutePath(), album, artist, title, track, coverBase64);
 	}
 
 	private String getAlbum(MP3File mp3File) {
@@ -111,6 +116,25 @@ public class MainController implements TemplateViewRoute {
 			return mp3File.getID3v1Tag().getTrackNumberOnAlbum();
 		} else if (mp3File.getID3v2Tag() != null) {
 			return mp3File.getID3v2Tag().getTrackNumberOnAlbum();
+		} else {
+			return null;
+		}
+	}
+
+	private String getCover(MP3File mp3File) {
+		if (mp3File.getID3v2Tag() != null) {
+		 	Iterator apics = mp3File.getID3v2Tag().getFrameOfType("APIC");
+			if (apics.hasNext()) {
+				Object next = apics.next();
+				ID3v2_3Frame frame = (ID3v2_3Frame) next;
+				FrameBodyAPIC apic = (FrameBodyAPIC) frame.getBody();
+				byte[] data = (byte[]) apic.getObject("Picture Data");
+				String mime = (String) apic.getObject("MIME Type");
+				Base64.Encoder encode = Base64.getEncoder();
+				String res = encode.encodeToString(data);
+				return "data:" + mime + ";base64," + res;
+			}
+			return null;
 		} else {
 			return null;
 		}

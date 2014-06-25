@@ -7,17 +7,15 @@ public class Mp3Metadata {
 	public String artist;
 	public String title;
 	public String track;
+	public String coverURI;
 
-	public Mp3Metadata(String filePath, String album, String artist, String title, String track) {
+	public Mp3Metadata(String filePath, String album, String artist, String title, String track, String coverURI) {
 		this.filePath = filePath;
 		this.album = album;
 		this.artist = artist;
 		this.title = title;
 		this.track = track;
-	}
-
-	public Mp3Metadata(String filePath) {
-		this.filePath = filePath;
+		this.coverURI = coverURI;
 	}
 
 	public String getFilePath() {
@@ -38,6 +36,10 @@ public class Mp3Metadata {
 
 	public String getTrack() {
 		return track;
+	}
+
+	public String getCoverURI() {
+		return coverURI;
 	}
 
 }

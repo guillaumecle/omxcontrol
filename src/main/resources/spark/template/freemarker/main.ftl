@@ -14,24 +14,29 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h4>
-	Library (${freeSpace})
-</h4>
-<ul id="library">
-<#list lib as item>
-    <li onclick="addFromLib(this)" id="${item.filePath}">
-		<#if item.title??!>
-			${item.title}
-			<#if item.artist??!>
-				<br>
-				${item.artist}
+<div id="library_c">
+	<h4>
+		Library (${freeSpace})
+	</h4>
+	<ul id="library">
+	<#list lib as item>
+		<li onclick="addFromLib(this)" id="${item.filePath}">
+			<#if item.coverURI??!>
+				<img src="${item.coverURI}">
 			</#if>
-		<#else>
-			${item.filePath}
-		</#if>
-    </li>
-</#list>
-</ul>
+			<#if item.title??!>
+				${item.title}
+				<#if item.artist??!>
+					<br>
+					${item.artist}
+				</#if>
+			<#else>
+				${item.filePath}
+			</#if>
+		</li>
+	</#list>
+	</ul>
+</div>
 <p>
 	<input type="file" onchange="addFile(this)">
 </p>

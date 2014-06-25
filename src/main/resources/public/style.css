@@ -11,14 +11,22 @@ a:hover {
 progress {
 	width: 100%;
 }
-ul#library li{
+#library_c {
+	float: left;
+}
+ul#library li img {
+	max-height: 50px;
+	float: left;
+}
+ul#library li {
+	height: 50px;
 	list-style-type: none;
 	margin-bottom: 2px;
 	max-width: 400px;
 	cursor: pointer;
-	background: silver;
+	background: whitesmoke;
 }
-ul#library li:hover{
+ul#library li:hover {
 	text-decoration: underline;
-	background: gray;
+	background: gainsboro;
 }
