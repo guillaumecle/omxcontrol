@@ -12,6 +12,7 @@ import com.cguillaume.omxcontrol.Config;
 import com.cguillaume.omxcontrol.job.UploadJob;
 import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
 import com.cguillaume.omxcontrol.job.Jobs;
+import com.cguillaume.omxcontrol.job.YoutubeJob;
 import com.cguillaume.omxcontrol.model.Player;
 import com.cguillaume.omxcontrol.model.Playlist;
 import com.cguillaume.omxcontrol.model.Synthesizer;

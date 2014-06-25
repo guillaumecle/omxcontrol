@@ -12,7 +12,7 @@ import java.util.Observable;
 import java.util.Scanner;
 
 import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.controller.YoutubeJob;
+import com.cguillaume.omxcontrol.job.YoutubeJob;
 import com.cguillaume.omxcontrol.model.VeryPrivate;
 import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 import com.cguillaume.omxcontrol.websocket.WebSocketManager;
