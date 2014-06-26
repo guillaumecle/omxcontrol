@@ -57,6 +57,17 @@ public abstract class BaseSynthesizer extends Synthesizer {
 		return playing.get();
 	}
 
+	@Override
+	public void setVolume(Integer i) {
+		while (volume.getValue() != i) {
+			if (volume.getValue() > i) {
+				decreaseVolume();
+			} else {
+				increaseVolume();
+			}
+		}
+	}
+
 	public class SynthesizerProcess implements CloseListener{
 
 		private boolean stopped;

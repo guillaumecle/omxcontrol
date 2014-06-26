@@ -69,6 +69,7 @@ function updateJob(job) {
 }
 function setVolume(volume) {
 	jQuery('#volume').text(volume + '%');
+	document.getElementById('volume_range').value = volume;
 }
 // *************** control *************
 function startAt(index) {

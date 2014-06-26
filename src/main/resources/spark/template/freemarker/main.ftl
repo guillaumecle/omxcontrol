@@ -65,7 +65,8 @@
 		Volume : <span id="volume">${volume}%</span>
 		<button onclick="omxWS.sendAction('changeVolume', false)">-</button>
 		<button onclick="omxWS.sendAction('changeVolume', true)">+</button>
-		<input type="range">
+		<input id="volume_range" type="range" max="100" min="1" step="3" value="${volume}"
+			   onchange="omxWS.sendAction('setVolume', this.value);">
 	</p>
 </div>
 <div class="col">

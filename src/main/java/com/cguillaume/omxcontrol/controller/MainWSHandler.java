@@ -83,6 +83,11 @@ public class MainWSHandler extends WebSocketHandler {
 		player.startAt(i);
 	}
 
+	@Handler
+	public void setVolume(Integer i) {
+		synthesizer.setVolume(i);
+	}
+
 	@Override
 	public void handleBinary(byte[] payload, int offset, int len) {
 		File file = new File(config.getTempDirLocation() + File.separator + System.currentTimeMillis() + System.nanoTime());

@@ -18,5 +18,5 @@ public abstract class Synthesizer extends Observable {
 
 	public abstract void increaseVolume();
 	public abstract void decreaseVolume();
-
+	public abstract void setVolume(Integer i);
 }
