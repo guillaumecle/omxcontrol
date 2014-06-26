@@ -10,9 +10,9 @@ import com.google.inject.Singleton;
 @Singleton
 public class Playlist extends Observable {
 
-	private final List<String> list = new ArrayList<>();
+	private final List<Mp3Metadata> list = new ArrayList<>();
 
-	public void add(String track) {
+	public void add(Mp3Metadata track) {
 		list.add(track);
 		setChanged();
 		notifyObservers(new WebSocketActionWrapper("playlistUpdated", list));
@@ -26,11 +26,11 @@ public class Playlist extends Observable {
 		return list.size();
 	}
 
-	public String get(Integer integer) {
+	public Mp3Metadata get(Integer integer) {
 		return list.get(integer);
 	}
 
-	public List<String> getList() {
+	public List<Mp3Metadata> getList() {
 		return list;
 	}
 

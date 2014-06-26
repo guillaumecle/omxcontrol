@@ -1,6 +1,16 @@
+// ************* Struc ***************
+function Track(filePath, album, artist, title, track, coverURI) {
+	this.filePath = filePath;
+	this.album = album;
+	this.artist = artist;
+	this.title = title;
+	this.track = track;
+	this.coverURI = coverURI;
+}
 // ************* Model ***************
 var current;
 var playing;
+var alive;
 // *************** UI ****************
 function reBuildPlaylist(playlist) {
 	var container = jQuery('#playlist');
@@ -10,7 +20,16 @@ function reBuildPlaylist(playlist) {
 		var td = jQuery('<td>');
 		if (index == current)
 			td.text(playing ? '▶' : 'P');
-		var a = jQuery('<a>').text(track);
+		var a = jQuery('<div>')
+			.attr('class', 'track');
+		if (track.coverURI) {
+			a.append(jQuery('<img>').attr('src', track.coverURI));
+		}
+		a.append(document.createTextNode(track.title));
+		if (track.artist) {
+			a.append(jQuery('<br>'));
+			a.append(document.createTextNode(track.artist));
+		}
 		a.onclick = function(event) {
 			console.log(event);
 		};
@@ -19,7 +38,7 @@ function reBuildPlaylist(playlist) {
 }
 function rebuildPlayIcon() {
 	jQuery('#playlist').find('td:first-child').each(function(index, td) {
-		td.textContent = index == current ? playing ? '▶' : 'P' : '';
+		td.textContent = index == current && alive ? playing ? '▶' : 'P' : '';
 	});
 }
 function addJob(job) {
@@ -39,8 +58,8 @@ function setVolume(volume) {
 	jQuery('#volume').text(volume + '%');
 }
 // *************** control *************
-function addFromLib(elem) {
-    omxWS.sendAction('add', elem.id)
+function addFromLib(index) {
+    omxWS.sendAction('add', index);
 }
 function pause() {
     omxWS.sendAction('pause');
@@ -99,6 +118,10 @@ updateCurrent = function(current) {
 };
 playingChanged = function(playing) {
 	window.playing = playing;
+	rebuildPlayIcon();
+};
+aliveChanged = function(alive) {
+	window.alive = alive;
 	rebuildPlayIcon();
 };
 uploadCompleted = function(job) {

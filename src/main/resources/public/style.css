@@ -1,32 +1,41 @@
+body {
+	font-family: arial, sans-serif;
+}
 a {
     cursor: pointer;
 }
 a:hover {
     text-decoration: underline;
 }
-
 #jobs {
 	max-width: 400px;
 }
 progress {
 	width: 100%;
 }
-#library_c {
+.col {
 	float: left;
+	width: 33%;
 }
-ul#library li img {
+.track img {
 	max-height: 50px;
 	float: left;
 }
-ul#library li {
+.track {
 	height: 50px;
 	list-style-type: none;
 	margin-bottom: 2px;
-	max-width: 400px;
 	cursor: pointer;
 	background: whitesmoke;
 }
-ul#library li:hover {
+.track:hover {
 	text-decoration: underline;
 	background: gainsboro;
+}
+#playlist {
+	width: 100%;
+}
+#playlist tr td:first-child {
+	width: 15px;
+	text-align: center;
 }

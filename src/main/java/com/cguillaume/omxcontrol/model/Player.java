@@ -45,7 +45,7 @@ public class Player extends Observable implements Observer {
 	}
 
 	private void startCurrent() {
-		synthesizer.startPlaying(playlist.get(current.get()));
+		synthesizer.startPlaying(playlist.get(current.get()).filePath);
 	}
 
 	public Integer getCurrent() {

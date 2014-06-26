@@ -1,9 +1,8 @@
 package com.cguillaume.omxcontrol.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,15 +12,21 @@ import com.cguillaume.omxcontrol.job.UploadJob;
 import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
 import com.cguillaume.omxcontrol.job.Jobs;
 import com.cguillaume.omxcontrol.job.YoutubeJob;
-import com.cguillaume.omxcontrol.model.Player;
-import com.cguillaume.omxcontrol.model.Playlist;
-import com.cguillaume.omxcontrol.model.Synthesizer;
+import com.cguillaume.omxcontrol.model.*;
 import com.cguillaume.omxcontrol.websocket.Handler;
 import com.cguillaume.omxcontrol.websocket.WebSocketHandler;
 import com.cguillaume.omxcontrol.youtube.YoutubeDownloader;
 
 @Singleton
 public class MainWSHandler extends WebSocketHandler {
+
+	private static final List<String> allowedExtensions = Arrays.asList("mp3", "m4a");
+
+	private static final FilenameFilter audioFileFilter = (dir, name) -> {
+		String[] split = name.split("\\.");
+		String extension = split[split.length - 1];
+		return allowedExtensions.contains(extension);
+	};
 
 	@Inject
 	private Player player;
@@ -37,6 +42,8 @@ public class MainWSHandler extends WebSocketHandler {
 	private Synthesizer synthesizer;
 	@Inject
 	private Jobs jobs;
+	@Inject
+	private Library library;
 
 	@Handler
 	public void pause() {
@@ -44,8 +51,8 @@ public class MainWSHandler extends WebSocketHandler {
 	}
 
 	@Handler
-	public void add(String path) {
-		playlist.add(path);
+	public void add(Integer i) {
+		playlist.add(library.get(i));
 	}
 
 	@Handler
