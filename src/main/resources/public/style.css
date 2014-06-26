@@ -13,10 +13,6 @@ a:hover {
 progress {
 	width: 100%;
 }
-.col {
-	float: left;
-	width: 33%;
-}
 .track img {
 	max-height: 50px;
 	float: left;
@@ -29,7 +25,6 @@ progress {
 	background: whitesmoke;
 }
 .track:hover {
-	text-decoration: underline;
 	background: gainsboro;
 }
 #playlist {
@@ -38,4 +33,10 @@ progress {
 #playlist tr td:first-child {
 	width: 15px;
 	text-align: center;
+}
+@media screen and (min-width: 800px) {
+	.col {
+		float: left;
+		width: 33%;
+	}
 }

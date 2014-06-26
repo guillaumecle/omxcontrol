@@ -12,6 +12,20 @@ var current;
 var playing;
 var alive;
 // *************** UI ****************
+function createTrackDiv(track, onClick) {
+	var trackDiv = jQuery('<div>')
+		.attr('class', 'track');
+	if (track.coverURI) {
+		trackDiv.append(jQuery('<img>').attr('src', track.coverURI));
+	}
+	trackDiv.append(document.createTextNode(track.title));
+	if (track.artist) {
+		trackDiv.append(jQuery('<br>'));
+		trackDiv.append(document.createTextNode(track.artist));
+	}
+	trackDiv.click(onClick);
+	return trackDiv;
+}
 function reBuildPlaylist(playlist) {
 	var container = jQuery('#playlist');
 	container.empty();
@@ -20,20 +34,17 @@ function reBuildPlaylist(playlist) {
 		var td = jQuery('<td>');
 		if (index == current)
 			td.text(playing ? '▶' : 'P');
-		var a = jQuery('<div>')
-			.attr('class', 'track');
-		if (track.coverURI) {
-			a.append(jQuery('<img>').attr('src', track.coverURI));
-		}
-		a.append(document.createTextNode(track.title));
-		if (track.artist) {
-			a.append(jQuery('<br>'));
-			a.append(document.createTextNode(track.artist));
-		}
-		a.onclick = function(event) {
-			console.log(event);
-		};
-		container.append(tr.append(td).append(jQuery('<td>').append(a)));
+		var trackDiv = createTrackDiv(track, console.log);
+		container.append(tr.append(td).append(jQuery('<td>').append(trackDiv)));
+	});
+}
+function reBuildLibrary(library) {
+	var container = jQuery('#library');
+	container.empty();
+	library.forEach(function (track, index) {
+		container.append(createTrackDiv(track, function() {
+			addFromLib(index);
+		}));
 	});
 }
 function rebuildPlayIcon() {
@@ -112,6 +123,7 @@ omxWS.sendAction = function(action, message) {
 };
 // ********* websocket handler **************
 playlistUpdated = reBuildPlaylist;
+libraryUpdated = reBuildLibrary;
 updateCurrent = function(current) {
 	window.current = current;
 	rebuildPlayIcon();
@@ -124,12 +136,6 @@ aliveChanged = function(alive) {
 	window.alive = alive;
 	rebuildPlayIcon();
 };
-uploadCompleted = function(job) {
-	var li = jQuery('<li>').append(jQuery('<a>').text(job.jsFile.name).click(function() {
-		addFromLib(this);
-	}));
-	updateJob(job);
-	jQuery('#library').append(li);
-};
+uploadCompleted = updateJob;
 downloadProgress = updateJob;
 volumeUpdated = setVolume;

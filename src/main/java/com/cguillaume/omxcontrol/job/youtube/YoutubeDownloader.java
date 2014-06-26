@@ -1,4 +1,4 @@
-package com.cguillaume.omxcontrol.youtube;
+package com.cguillaume.omxcontrol.job.youtube;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,7 +12,6 @@ import java.util.Observable;
 import java.util.Scanner;
 
 import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.job.YoutubeJob;
 import com.cguillaume.omxcontrol.model.VeryPrivate;
 import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 import com.cguillaume.omxcontrol.websocket.WebSocketManager;

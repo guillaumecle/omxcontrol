@@ -1,6 +1,7 @@
 package com.cguillaume.omxcontrol.model;
 
 import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
 import org.farng.mp3.id3.FrameBodyAPIC;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Singleton
-public class Library {
+public class Library extends Observable {
 
 	private static final List<String> allowedExtensions = Arrays.asList("mp3", "m4a");
 
@@ -41,6 +42,17 @@ public class Library {
 	public List<Mp3Metadata> getList() {
 		return list;
 	}
+
+	public void add(File file) {
+		add(getTrack(file));
+	}
+
+	public void add(Mp3Metadata track) {
+		list.add(track);
+		setChanged();
+		notifyObservers(new WebSocketActionWrapper("libraryUpdated", getList()));
+	}
+
 	private Mp3Metadata getTrack(File file) {
 		MP3File mp3File;
 		String album = null;

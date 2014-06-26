@@ -47,7 +47,7 @@
 		<tr>
 			<td>
 				<#if current == item_index>
-					<#if playing == 'true'>
+					<#if playing == 'true' && alive == 'true'>
 						&#9654;
 					<#else>
 						P
@@ -65,7 +65,7 @@
 		Volume : <span id="volume">${volume}%</span>
 		<button onclick="omxWS.sendAction('changeVolume', false)">-</button>
 		<button onclick="omxWS.sendAction('changeVolume', true)">+</button>
-		<span></span>
+		<input type="range">
 	</p>
 </div>
 <div class="col">

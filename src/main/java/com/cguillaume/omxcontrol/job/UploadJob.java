@@ -7,5 +7,6 @@ import com.cguillaume.omxcontrol.job.Job;
 public class UploadJob extends Job {
 
 	public JsFile jsFile;
+	public UploadStatus status;
 
 }

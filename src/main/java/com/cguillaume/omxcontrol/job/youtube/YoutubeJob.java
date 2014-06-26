@@ -1,7 +1,7 @@
-package com.cguillaume.omxcontrol.job;
+package com.cguillaume.omxcontrol.job.youtube;
 
 import com.cguillaume.omxcontrol.job.Job;
-import com.cguillaume.omxcontrol.youtube.DownloadStatus;
+import com.cguillaume.omxcontrol.job.youtube.DownloadStatus;
 
 public class YoutubeJob extends Job {
 
