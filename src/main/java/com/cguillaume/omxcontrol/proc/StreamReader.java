@@ -22,7 +22,7 @@ public class StreamReader extends Thread {
 		return this;
 	}
 
-	public StreamReader addCloseListenerListener(CloseListener closeListener) {
+	public StreamReader addCloseListener(CloseListener closeListener) {
 		closeListeners.add(closeListener);
 		return this;
 	}

@@ -29,12 +29,14 @@ function createTrackDiv(track, onClick) {
 function reBuildPlaylist(playlist) {
 	var container = jQuery('#playlist');
 	container.empty();
-	jQuery.each(playlist, function(index, track) {
+	playlist.forEach(function(track, index) {
 		var tr = jQuery('<tr>');
 		var td = jQuery('<td>');
-		if (index == current)
+		if (index == current && alive)
 			td.text(playing ? '▶' : 'P');
-		var trackDiv = createTrackDiv(track, console.log);
+		var trackDiv = createTrackDiv(track, function() {
+			startAt(index);
+		});
 		container.append(tr.append(td).append(jQuery('<td>').append(trackDiv)));
 	});
 }
@@ -69,6 +71,9 @@ function setVolume(volume) {
 	jQuery('#volume').text(volume + '%');
 }
 // *************** control *************
+function startAt(index) {
+	omxWS.sendAction('startAt', index);
+}
 function addFromLib(index) {
     omxWS.sendAction('add', index);
 }

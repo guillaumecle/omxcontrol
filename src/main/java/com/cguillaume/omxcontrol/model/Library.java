@@ -65,6 +65,7 @@ public class Library extends Observable {
 			album = getAlbum(mp3File);
 			artist = getArtist(mp3File);
 			title = getTitle(mp3File);
+			System.out.println("title = " + title);
 			track = getTrackNumber(mp3File);
 			coverBase64 = getCover(mp3File);
 		} catch (IOException | TagException e) {

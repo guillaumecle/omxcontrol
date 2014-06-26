@@ -31,13 +31,15 @@ public class MPlayerSynthesizer extends BaseSynthesizer {
 	}
 
 	public void stop() {
+		process.stop();
 		clavier.printf("q");
+		playing.set(false);
 		alive.set(false);
 	}
 
 	@Override
 	public void increaseVolume() {
-		if (volume.getValue() != 100) {
+		if (volume.getValue() < 100) {
 			if (alive.get()) {
 				clavier.printf("0");
 			}
@@ -47,10 +49,12 @@ public class MPlayerSynthesizer extends BaseSynthesizer {
 
 	@Override
 	public void decreaseVolume() {
-		if (alive.get()) {
-			clavier.printf("9");
+		if (volume.getValue() > 1) {
+			if (alive.get()) {
+				clavier.printf("9");
+			}
+			volume.decreased();
 		}
-		volume.decreased();
 	}
 
 }

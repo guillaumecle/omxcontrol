@@ -30,14 +30,22 @@ public class Player extends Observable implements Observer {
 			synthesizer.pause();
 		} else {
 			if (playlist.isNotEmpty()) {
-				if (!current.get().equals(playlist.size())) {
-					incrementCurrent();
-				} else {
-					current.set(0);
-				}
+				goToNext();
 				startCurrent();
 			}
 		}
+	}
+
+	private void goToNext() {
+		if (isAtTheEnd()) {
+			current.set(0);
+		} else {
+			incrementCurrent();
+		}
+	}
+
+	private boolean isAtTheEnd() {
+		return current.get() + 1 == playlist.size();
 	}
 
 	private void incrementCurrent() {
@@ -52,13 +60,18 @@ public class Player extends Observable implements Observer {
 		return current.get();
 	}
 
+	public void startAt(Integer i) {
+		current.set(i);
+		startCurrent();
+	}
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Synthesizer && arg != null && arg instanceof WebSocketActionWrapper) {
 			WebSocketActionWrapper wsac = (WebSocketActionWrapper) arg;
-			if (wsac.getAction().equals("aliveChanged") && wsac.getMessage().equals("false")) {
-				if (playlist.size() > current.get() + 1) {
-					incrementCurrent();
+			if (wsac.getAction().equals("aliveEnded")) {
+				if (playlist.isNotEmpty()) {
+					goToNext();
 					startCurrent();
 				}
 			}

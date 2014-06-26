@@ -3,6 +3,7 @@ package com.cguillaume.omxcontrol.model;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.cguillaume.omxcontrol.proc.CloseListener;
 import com.cguillaume.omxcontrol.proc.ErrReader;
 import com.cguillaume.omxcontrol.proc.StdReader;
 import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
@@ -28,16 +29,17 @@ public abstract class BaseSynthesizer extends Synthesizer {
 		}
 	};
 
-	protected Process playerProcess;
+	protected SynthesizerProcess process;
 	protected PrintWriter clavier;
 
 	protected void createProcess(String command, String trackFile) throws IOException {
 		String volumeCommand = "-volume";
 		ProcessBuilder processBuilder = new ProcessBuilder(command, volumeCommand, volume.getValue().toString(), trackFile);
-		playerProcess = processBuilder.start();
+		Process playerProcess = processBuilder.start();
 		StdReader std = new StdReader(playerProcess);
 //		std.addNewLineListener(logger::info);
-		std.addCloseListenerListener(e -> alive.set(false));
+		process = new SynthesizerProcess();
+		std.addCloseListener(process);
 		std.start();
 		ErrReader err = new ErrReader(playerProcess);
 		err.addNewLineListener(logger::warn);
@@ -55,4 +57,21 @@ public abstract class BaseSynthesizer extends Synthesizer {
 		return playing.get();
 	}
 
+	public class SynthesizerProcess implements CloseListener{
+
+		private boolean stopped;
+
+		public void stop() {
+			stopped = true;
+		}
+
+		@Override
+		public void onClose(Exception e) {
+			if(!stopped) {
+				alive.set(false);
+				BaseSynthesizer.this.setChanged();
+				BaseSynthesizer.this.notifyObservers(new WebSocketActionWrapper("aliveEnded", true));
+			}
+		}
+	}
 }
