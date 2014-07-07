@@ -1,5 +1,5 @@
 <#macro track item fct>
-<div class="track" onclick="${fct}">
+<div class="track" onclick="${fct}" tabindex="1">
 	<#if item.coverURI??!>
 		<img src="${item.coverURI}">
 	</#if>

@@ -66,7 +66,6 @@ public class MainWSHandler extends WebSocketHandler {
 		jobs.add(youtubeJob);
 		youtubeDownloader.init(youtubeJob);
 		new Thread(youtubeDownloader).start();
-//		youtubeDownloader.run();
 	}
 
 	@Handler

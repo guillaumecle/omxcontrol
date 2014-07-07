@@ -1,14 +1,12 @@
 body {
 	font-family: arial, sans-serif;
+	margin: 0;
 }
 a {
     cursor: pointer;
 }
 a:hover {
     text-decoration: underline;
-}
-#jobs {
-	max-width: 400px;
 }
 progress {
 	width: 100%;
@@ -39,4 +37,57 @@ progress {
 		float: left;
 		width: 33%;
 	}
+}
+#actionbar, #uploadBar.enLarge, #youtubeBar.enLarge {
+	height: 45px;
+}
+body {
+	padding-top: 45px;
+	transition: padding-top 500ms;
+}
+body.enLarge {
+	padding-top: 90px;
+}
+#actionbar, #uploadBar, #youtubeBar, #actionBarContainer {
+	width: 100%;
+	font-size: 36px;
+	font-weight: bold;
+	overflow-y: hidden;
+}
+#uploadBar, #youtubeBar {
+	transition: height 500ms;
+	height: 0;
+}
+#actionBarContainer, #actionbar {
+	position: fixed;
+}
+#actionbar {
+	background: #ff9988;
+	height: 45px;
+	top: 0;
+}
+#actionBarContainer {
+	top: 45px
+}
+#youtubeBar {
+	background: #ff353b;
+}
+#uploadBar {
+	background: #da92ff;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+#youtubeBar table td {
+	padding: 0 5px;
+}
+input[type='file'] {
+	font-size: 28px;
+	width: 100%;
+}
+#urlInput {
+	background: white;
+	width: 100%;
+	display: inline-block;
 }

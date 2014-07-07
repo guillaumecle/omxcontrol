@@ -14,7 +14,8 @@ var alive;
 // *************** UI ****************
 function createTrackDiv(track, onClick) {
 	var trackDiv = jQuery('<div>')
-		.attr('class', 'track');
+		.attr('class', 'track')
+		.attr('tabindex', 1);
 	if (track.coverURI) {
 		trackDiv.append(jQuery('<img>').attr('src', track.coverURI));
 	}
@@ -81,11 +82,11 @@ function addFromLib(index) {
 function pause() {
     omxWS.sendAction('pause');
 }
-function add(elem) {
+function add(url) {
 	var job = {
-		name : 'Download of ' + elem.previousSibling.previousSibling.value,
+		name : 'Download of ' + url,
 		id : Math.round(new Date().getTime() * Math.random()),
-		url : elem.previousSibling.previousSibling.value,
+		url : url,
 		status : 'UNINITIALIZED'
 	};
 	omxWS.sendAction('dlFromYoutube', job);
@@ -104,6 +105,9 @@ function addFile(elem) {
 		omxWS.sendAction("uploadFile", job);
 		omxWS.send(fileFilst[0]);
 	}
+}
+function updateVolume(value) {
+	omxWS.sendAction('setVolume', value);
 }
 // ******* websocket api *****************
 var omxWS = new WebSocket('ws://' + location.hostname + ':8080/');
