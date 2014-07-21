@@ -17,6 +17,8 @@ public class Player extends Observable implements Observer {
 	private Playlist playlist;
 
 	private boolean playOnAdd = true;
+	private boolean repatePlaylist = false;
+	
 	private VeryPrivate<Integer> current = new VeryPrivate<Integer>(-1) {
 		@Override
 		protected void onUpdate() {
@@ -36,12 +38,16 @@ public class Player extends Observable implements Observer {
 		}
 	}
 
-	private void goToNext() {
+	private boolean goToNext() {
 		if (isAtTheEnd()) {
+			if (!repatePlaylist) {
+				return false;
+			}
 			current.set(0);
 		} else {
 			incrementCurrent();
 		}
+		return true;
 	}
 
 	private boolean isAtTheEnd() {
@@ -67,13 +73,18 @@ public class Player extends Observable implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (o instanceof Synthesizer && arg != null && arg instanceof WebSocketActionWrapper) {
-			WebSocketActionWrapper wsac = (WebSocketActionWrapper) arg;
-			if (wsac.getAction().equals("aliveEnded")) {
-				if (playlist.isNotEmpty()) {
-					goToNext();
-					startCurrent();
-				}
+		if (o instanceof Synthesizer && arg != null && arg instanceof String) {
+			String string = (String) arg;
+			if (string.equals("aliveEnded")) {
+				handlePlayEnd();
+			}
+		}
+	}
+
+	private void handlePlayEnd() {
+		if (playlist.isNotEmpty()) {
+			if (goToNext()) {
+				startCurrent();
 			}
 		}
 	}

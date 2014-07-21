@@ -59,7 +59,7 @@ public abstract class BaseSynthesizer extends Synthesizer {
 
 	@Override
 	public void setVolume(Integer i) {
-		while (volume.getValue() != i) {
+		while (!volume.getValue().equals(i)) {
 			if (volume.getValue() > i) {
 				decreaseVolume();
 			} else {
@@ -81,7 +81,7 @@ public abstract class BaseSynthesizer extends Synthesizer {
 			if(!stopped) {
 				alive.set(false);
 				BaseSynthesizer.this.setChanged();
-				BaseSynthesizer.this.notifyObservers(new WebSocketActionWrapper("aliveEnded", true));
+				BaseSynthesizer.this.notifyObservers("aliveEnded");
 			}
 		}
 	}

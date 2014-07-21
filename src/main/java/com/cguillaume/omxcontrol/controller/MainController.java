@@ -1,15 +1,8 @@
 package com.cguillaume.omxcontrol.controller;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.cguillaume.omxcontrol.model.*;
-import org.farng.mp3.MP3File;
-import org.farng.mp3.TagException;
-import org.farng.mp3.id3.FrameBodyAPIC;
-import org.farng.mp3.id3.ID3v2_3Frame;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -17,6 +10,11 @@ import spark.TemplateViewRoute;
 
 import com.cguillaume.omxcontrol.Config;
 import com.cguillaume.omxcontrol.Util;
+import com.cguillaume.omxcontrol.model.Library;
+import com.cguillaume.omxcontrol.model.Player;
+import com.cguillaume.omxcontrol.model.Playlist;
+import com.cguillaume.omxcontrol.model.Synthesizer;
+import com.cguillaume.omxcontrol.model.Volume;
 import com.google.inject.Inject;
 
 public class MainController implements TemplateViewRoute {

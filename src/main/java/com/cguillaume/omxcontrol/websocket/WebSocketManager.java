@@ -7,7 +7,11 @@ import java.util.Observable;
 import javax.inject.Inject;
 
 import com.cguillaume.omxcontrol.controller.upload.UploadQueue;
-import com.cguillaume.omxcontrol.model.*;
+import com.cguillaume.omxcontrol.model.Library;
+import com.cguillaume.omxcontrol.model.Player;
+import com.cguillaume.omxcontrol.model.Playlist;
+import com.cguillaume.omxcontrol.model.Synthesizer;
+import com.cguillaume.omxcontrol.model.Volume;
 import com.google.inject.Singleton;
 
 @Singleton

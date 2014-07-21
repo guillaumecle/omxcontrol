@@ -32,9 +32,11 @@ function reBuildPlaylist(playlist) {
 	container.empty();
 	playlist.forEach(function(track, index) {
 		var tr = jQuery('<tr>');
-		var td = jQuery('<td>');
-		if (index == current && alive)
-			td.text(playing ? '▶' : 'P');
+		var span = jQuery('<span>').addClass('fa');
+		if (index == current && alive) {
+			span.addClass(playing ? 'fa-play' : 'fa-pause');
+		}
+		var td = jQuery('<td>').append(span);
 		var trackDiv = createTrackDiv(track, function() {
 			startAt(index);
 		});
@@ -52,7 +54,11 @@ function reBuildLibrary(library) {
 }
 function rebuildPlayIcon() {
 	jQuery('#playlist').find('td:first-child').each(function(index, td) {
-		td.textContent = index == current && alive ? playing ? '▶' : 'P' : '';
+		var span = jQuery(td.firstChild);
+		span.removeClass('fa-play fa-pause');
+		if (index == current && alive) {
+			span.addClass(playing ? 'fa-play' : 'fa-pause');
+		}
 	});
 }
 function addJob(job) {

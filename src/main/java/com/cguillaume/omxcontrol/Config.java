@@ -7,19 +7,27 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.google.inject.Singleton;
 
 @Singleton
 public class Config {
 
-	private Map<String, String> keys = new HashMap<String, String>() {
+	private final List<String> keys = new LinkedList<String>() {
 		{
-			put("lib", "lib");
-			put("tmp", "tmp");
+			add("lib");
+			add("tmp");
 		}
 	};
+
+	private final Map<String, String> keysMap = new HashMap<String, String>() {
+		{
+			for (String key : keys) {
+				put(key, key);
+			}
+		}
+	};
+
 	private Map<String, String> parsedMap = new HashMap<>();
 
 	public Config() throws Exception {
@@ -43,7 +51,7 @@ public class Config {
 
 	private List<String> getMissingValues() {
 		List<String> missing = new LinkedList<>();
-		for (String value : keys.values()) {
+		for (String value : keys) {
 			if (!parsedMap.containsKey(value)) {
 				missing.add(value);
 			}
@@ -52,11 +60,11 @@ public class Config {
 	}
 
 	public String getLibraryLocation() {
-		return parsedMap.get(keys.get("lib"));
+		return parsedMap.get(keysMap.get("lib"));
 	}
 
 	public String getTempDirLocation() {
-		return parsedMap.get(keys.get("tmp"));
+		return parsedMap.get(keysMap.get("tmp"));
 	}
 
 }

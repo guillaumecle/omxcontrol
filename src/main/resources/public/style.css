@@ -65,6 +65,7 @@ body.enLarge {
 	background: #ff9988;
 	height: 45px;
 	top: 0;
+	padding: 0 10px;
 }
 #actionBarContainer {
 	top: 45px
@@ -84,10 +85,14 @@ table {
 }
 input[type='file'] {
 	font-size: 28px;
-	width: 100%;
+	display: block;
+	width: calc(100% - 10px);
+	margin: 3px auto;
 }
 #urlInput {
+	font-size: 28px;
 	background: white;
-	width: 100%;
 	display: inline-block;
+	width: calc(100% - 8px);
+	margin-left: 8px;
 }

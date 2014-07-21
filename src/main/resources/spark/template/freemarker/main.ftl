@@ -16,42 +16,34 @@
     <script src="script.js"></script>
 	<script src="ui.js"></script>
     <link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="font-awesome.min.css">
 </head>
 <body>
 <div id="actionbar">
-	<a onclick="pause()" tabindex="1">&#9654;</a>
-	<a onclick="toggleActionBar(uploadBar)" tabindex="1">U</a>
-	<a onclick="toggleActionBar(youtubeBar)" tabindex="1">Y</a>
+	<a class="fa fa-play" onclick="pause()" tabindex="1"></a>
+	<a class="fa fa-upload" onclick="toggleActionBar(uploadBar)" tabindex="1"></a>
+	<a class="fa fa-youtube-play" onclick="toggleActionBar(youtubeBar)" tabindex="1"></a>
 	V
 	<input id="volume_range" type="range" max="100" min="1" step="3" value="${volume}"
 		   oninput="updateVolume(this.value)" onchange="updateVolume(this.value)" tabindex="1">
 	<span id="volume">${volume}%</span>
 </div>
 <div id="actionBarContainer">
-	<div id="uploadBar" style="font-size: 28px">
-		<table>
-			<td style="width:2px"></td>
-			<td style="font-size: 28px">
-				<input type="file" onchange="addFile(this)" tabindex="1">
-			</td>
-			<td style="width:2px"></td>
-		</table>
+	<div id="uploadBar">
+		<input type="file" onchange="addFile(this)" tabindex="1">
 	</div>
 	<div id="youtubeBar">
-		<table>
-			<td style="font-size: 28px">
-				<span id="urlInput" contenteditable tabindex="1"
-					  onkeydown="if(event.keyCode==13){event.preventDefault();add(this.textContent)}">
-					YoutubeUrl
-				</span>
-			</td>
-			<td style="width: 40px;text-align: center">
-				<a onclick="add(urlInput.textContent)" tabindex="1">D</a>
-			</td>
-		</table>
+		<div style="width: calc(100% - 48px);display: inline-block;">
+			<span id="urlInput" contenteditable tabindex="1"
+				  onkeydown="if(event.keyCode==13){event.preventDefault();add(this.textContent)}">
+				YoutubeUrl
+			</span>
+		</div>
+		<a style="width: 30px;display: inline-block;" onclick="add(urlInput.textContent)" tabindex="1">
+			D
+		</a>
 	</div>
 </div>
-<#--<div id="actionbarbackground"></div>-->
 <div class="col">
 	<h4>
 		Library (${freeSpace})
@@ -75,13 +67,17 @@
 	<#list list as item>
 		<tr>
 			<td>
+				<span class="fa
 				<#if current == item_index>
-					<#if playing == 'true' && alive == 'true'>
-						&#9654;
-					<#else>
-						P
+					<#if alive == 'true'>
+						<#if playing == 'true'>
+							fa-play
+						<#else>
+							fa-pause
+						</#if>
 					</#if>
 				</#if>
+				"></span>
 			</td>
 			<td>
 				<@track item=item fct='startAt(${item_index})'/>

@@ -1,18 +1,25 @@
 package com.cguillaume.omxcontrol.model;
 
-import com.cguillaume.omxcontrol.Config;
-import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
 import org.farng.mp3.id3.FrameBodyAPIC;
 import org.farng.mp3.id3.ID3v2_3Frame;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.*;
+import com.cguillaume.omxcontrol.Config;
+import com.cguillaume.omxcontrol.websocket.WebSocketActionWrapper;
 
 @Singleton
 public class Library extends Observable {
@@ -119,9 +126,9 @@ public class Library extends Observable {
 
 	private String getCover(MP3File mp3File) {
 		if (mp3File.getID3v2Tag() != null) {
-			Iterator apics = mp3File.getID3v2Tag().getFrameOfType("APIC");
+			Iterator<ID3v2_3Frame> apics = mp3File.getID3v2Tag().getFrameOfType("APIC");
 			if (apics.hasNext()) {
-				ID3v2_3Frame frame = (ID3v2_3Frame) apics.next();
+				ID3v2_3Frame frame = apics.next();
 				FrameBodyAPIC apic = (FrameBodyAPIC) frame.getBody();
 				byte[] data = (byte[]) apic.getObject("Picture Data");
 				String mime = (String) apic.getObject("MIME Type");
